@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8" />
@@ -454,6 +454,94 @@
   font-weight: 900;  /* negrito opcional */
   background: transparent !important; /* sem fundo */
 }
+/* === Layout base === */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+header {
+  height: 76px;
+  background: #3b5bdb;
+  color: #e0e7ff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+
+#appContainer {
+  display: flex;
+  height: calc(100vh - 76px);
+  position: relative;
+}
+
+/* Canvas ocupa toda a tela */
+#canvasContainer {
+  flex-grow: 1;
+  background:
+    linear-gradient(#d3d9ff 1px, transparent 1px),
+    linear-gradient(90deg, #d3d9ff 1px, transparent 1px);
+  background-size: 30px 30px;
+  overflow: auto;
+  min-height: 400px;
+}
+
+/* Sidebar retrátil */
+#sidebar {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 280px;
+  max-height: 90vh;
+  background: #3b5bdb;
+  color: #e0e7ff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 12px rgba(0,0,0,0.3);
+  overflow-y: auto;
+  transform: translateX(-300px);
+  transition: transform 0.3s ease;
+  z-index: 1001;
+}
+
+/* Mostra a sidebar quando ativa */
+#sidebar.active {
+  transform: translateX(0);
+}
+
+/* Botão pequeno para abrir menu */
+#menuToggle {
+  width: 50px;
+  height: 50px;
+  background: #2245a8;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #e0e7ff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  z-index: 1002;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  #sidebar {
+    width: 220px;
+  }
+  #menuToggle {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
 
   
 
@@ -781,7 +869,27 @@ document.addEventListener('keydown', function(e) {
     alert("⚠️ Esta ação não é permitida no site!");
   }
 });
+
+const menuToggle = document.createElement('div');
+menuToggle.id = 'menuToggle';
+menuToggle.innerHTML = '≡'; // ícone hamburger
+document.body.appendChild(menuToggle);
+
+const sidebar = document.getElementById('sidebar');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('active');
+});
+
+// Fecha se clicar fora
+document.addEventListener('click', e => {
+  if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+    sidebar.classList.remove('active');
+  }
+});
+
 </script>
+
 
 
 </body>
