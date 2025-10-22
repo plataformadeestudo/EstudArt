@@ -1,0 +1,392 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EstudArt - Perfil</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: #3b5bdb;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 10px rgba(59,91,219,0.3);
+  }
+  .logo {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #e0e7ff;
+    letter-spacing: 2px;
+  }
+  nav a {
+    color: #dbe4ff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 24px;
+    transition: color 0.3s ease;
+  }
+  nav a:hover { color: #fff; }
+
+  main {
+    max-width: 1080px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+    flex-grow: 1;
+  }
+  h1 {
+    color: #3b5bdb;
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  form {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(59, 91, 219, 0.12);
+    padding: 24px 32px;
+    max-width: 700px;
+    margin: 0 auto 40px;
+  }
+
+  /* Foto */
+  #photoContainer {
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  #photoPreview, #photoPlaceholder {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 4px solid #3b5bdb;
+    background: #c4d3f9;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 12px;
+  }
+  #photoPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2245a8;
+  }
+  #photoPlaceholder svg {
+    width: 64px;
+    height: 64px;
+    fill: #2245a8;
+  }
+  .custom-file-upload {
+    display: inline-block;
+    padding: 10px 18px;
+    cursor: pointer;
+    background: #3b5bdb;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: background 0.3s;
+  }
+  .custom-file-upload:hover {
+    background: #2245a8;
+  }
+  #photoInput {
+    display: none;
+  }
+  #removePhotoBtn {
+    margin-top: 8px;
+    background: #bb2f2f;
+    color: #ffe5e5;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    display: none;
+  }
+
+  label {
+    font-weight: 600;
+    color: #2245a8;
+    display: block;
+    margin-bottom: 6px;
+  }
+  input[type="text"], textarea {
+    font-size: 1rem;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1.8px solid #3b5bdb;
+    resize: vertical;
+    width: 100%;
+    margin-bottom: 16px;
+    color: #2245a8;
+    background: #f0f4ff;
+  }
+  input:focus, textarea:focus { border-color: #2245a8; outline: none; }
+
+  /* Dias consecutivos */
+  #offensiveDisplay {
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 24px 0;
+    color: #2245a8;
+    text-align: center;
+    padding: 12px;
+    background: #dbe4ff;
+    border-radius: 10px;
+  }
+
+  /* Gráfico */
+  .progress-section {
+    margin: 30px 0;
+  }
+  .progress-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: #2245a8;
+  }
+  .progress-bar-container {
+    background: #c4d3f9;
+    border-radius: 16px;
+    width: 100%;
+    height: 26px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress-bar-fill {
+    background: #3b5bdb;
+    height: 100%;
+    width: 0%;
+    border-radius: 16px;
+    transition: width 0.6s ease;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+  }
+
+  /* Botão salvar */
+  button[type="submit"] {
+    margin-top: 20px;
+    padding: 14px 24px;
+    background:#3b5bdb;
+    color:#e0e7ff;
+    border:none;
+    border-radius:12px;
+    font-weight:700;
+    cursor:pointer;
+    width: 100%;
+  }
+  button[type="submit"]:hover {
+    background: #2245a8;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EstudArt</div>
+  <nav><a href="página inicial.html">Início</a></nav>
+</header>
+
+<main>
+  <h1>Meu Perfil</h1>
+
+  <form id="profileForm" novalidate>
+    <div id="photoContainer">
+      <img id="photoPreview" src="" alt="Foto do usuário" style="display:none" />
+      <div id="photoPlaceholder"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+      <label for="photoInput" class="custom-file-upload">Escolher Foto</label>
+      <input type="file" id="photoInput" accept="image/*" />
+      <button type="button" id="removePhotoBtn">Remover Foto</button>
+    </div>
+
+    <label for="nameInput">Nome</label>
+    <input type="text" id="nameInput" placeholder="Seu nome completo" />
+
+    <label for="hobbyInput">Hobby</label>
+    <input type="text" id="hobbyInput" placeholder="Seu hobby preferido" />
+
+    <label for="professionInput">Profissão</label>
+    <input type="text" id="professionInput" placeholder="Sua profissão" />
+
+    <label for="cityInput">Cidade</label>
+    <input type="text" id="cityInput" placeholder="Sua cidade" />
+
+    <label for="goalsInput">Metas</label>
+    <textarea id="goalsInput" rows="3" placeholder="Suas metas, sonhos ou objetivos"></textarea>
+
+    <div id="offensiveDisplay">Dias consecutivos acessando: 0</div>
+
+   
+
+    <button type="submit">Salvar Perfil</button>
+  </form>
+</main>
+
+<script>
+  const photoInput = document.getElementById('photoInput');
+  const photoPreview = document.getElementById('photoPreview');
+  const photoPlaceholder = document.getElementById('photoPlaceholder');
+  const removePhotoBtn = document.getElementById('removePhotoBtn');
+
+  let saveData = {
+    photo: null,
+    name: '',
+    hobby: '',
+    profession: '',
+    city: '',
+    goals: '',
+    offensiveDays: 0,
+    programUsage: { Cronograma: 3, Flashcards: 5, Calendário: 2, "Mapa Mental": 7, Biblioteca: 4, Cronômetro: 1 }
+  };
+
+  function saveProfile(profile){ localStorage.setItem('userProfile', JSON.stringify(profile)); }
+  function loadProfile(){
+    const data = localStorage.getItem('userProfile');
+    if (!data) return;
+    saveData = JSON.parse(data);
+    if (saveData.photo) {
+      photoPreview.src = saveData.photo;
+      photoPreview.style.display = 'block';
+      photoPlaceholder.style.display = 'none';
+      removePhotoBtn.style.display = 'inline-block';
+    }
+    document.getElementById('nameInput').value = saveData.name || '';
+    document.getElementById('hobbyInput').value = saveData.hobby || '';
+    document.getElementById('professionInput').value = saveData.profession || '';
+    document.getElementById('cityInput').value = saveData.city || '';
+    document.getElementById('goalsInput').value = saveData.goals || '';
+    updateProgressBars();
+  }
+
+  photoInput.addEventListener('change', e=>{
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev=>{
+      photoPreview.src = ev.target.result;
+      photoPreview.style.display = 'block';
+      photoPlaceholder.style.display = 'none';
+      removePhotoBtn.style.display = 'inline-block';
+      saveData.photo = ev.target.result;
+      saveProfile(saveData);
+    }
+    reader.readAsDataURL(file);
+  });
+
+  removePhotoBtn.addEventListener('click', ()=>{
+    photoPreview.src = '';
+    photoPreview.style.display = 'none';
+    photoPlaceholder.style.display = 'flex';
+    removePhotoBtn.style.display = 'none';
+    saveData.photo = null;
+    saveProfile(saveData);
+  });
+
+  // Progresso
+  function updateProgressBars(){
+    for(const key in saveData.programUsage){
+      const pct = Math.min(100, saveData.programUsage[key]*10); // cada ponto = 10%
+      const bar = document.getElementById("progress"+key.replace(" ",""));
+      if(bar){
+        bar.style.width = pct+"%";
+        bar.textContent = pct+"%";
+      }
+    }
+  }
+
+  // Dias consecutivos
+  function checkOffensive(){
+    const today = new Date().toDateString();
+    let data = JSON.parse(localStorage.getItem("offensiveData")) || { lastDate:null, count:0 };
+    if(data.lastDate===today){
+      saveData.offensiveDays=data.count;
+    }else{
+      const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+      if(data.lastDate===yesterday.toDateString()){ data.count++; }
+      else{ data.count=1; }
+      data.lastDate=today;
+      saveData.offensiveDays=data.count;
+      localStorage.setItem("offensiveData", JSON.stringify(data));
+    }
+    document.getElementById("offensiveDisplay").textContent=`Dias consecutivos acessando: ${saveData.offensiveDays}`;
+  }
+
+  document.getElementById("profileForm").addEventListener("submit", e=>{
+    e.preventDefault();
+    saveData.name=document.getElementById('nameInput').value;
+    saveData.hobby=document.getElementById('hobbyInput').value;
+    saveData.profession=document.getElementById('professionInput').value;
+    saveData.city=document.getElementById('cityInput').value;
+    saveData.goals=document.getElementById('goalsInput').value;
+    saveProfile(saveData);
+    alert("Perfil salvo com sucesso!");
+    updateProgressBars();
+  });
+
+  loadProfile();
+  checkOffensive();
+  updateProgressBars();
+
+  if(Notification && Notification.permission !== "granted"){
+    Notification.requestPermission();
+  }
+
+  // Checa a cada segundo se o cronômetro terminou
+  setInterval(() => {
+    const fimSalvo = localStorage.getItem("cronometroFim");
+    if(fimSalvo){
+      const fim = parseInt(fimSalvo);
+      const agora = Date.now();
+      if(agora >= fim){
+        // Remove o cronômetro salvo
+        localStorage.removeItem("cronometroFim");
+        localStorage.removeItem("cronometroPausado");
+
+        // Notificação
+        if(Notification.permission === "granted"){
+          new Notification("⏰ Tempo encerrado!", { body: "Seu cronômetro acabou!" });
+        } else {
+          alert("⏰ Tempo encerrado!");
+        }
+      }
+    }
+  }, 1000);
+  
+</script>
+
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert("⚠️ Clique direito desabilitado neste site!");
+});
+</script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
+    e.preventDefault();
+    alert("⚠️ Esta ação não é permitida no site!");
+  }
+});
+</script>
+
+</body>
+</html>
+
+
+
