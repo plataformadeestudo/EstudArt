@@ -5,13 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Biblioteca de Recursos - MeuSite</title>
 <style>
-  /* Reset básico */
+ 
+/* ===== Reset básico ===== */
 * {
   box-sizing: border-box;
-}
-body {
   margin: 0;
   padding: 0;
+}
+
+/* ===== Body ===== */
+body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: #f0f4ff;
   color: #222;
@@ -20,19 +23,15 @@ body {
   flex-direction: column;
 }
 
-/* Header */
+/* ===== Header ===== */
 header {
   background: #3b5bdb;
-  padding: 16px 24px; /* Espaçamento para altura 70px */
+  padding: 16px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 3px 10px rgba(59, 91, 219, 0.3);
   user-select: none;
-  position: sticky;
-  top: 0;
-  z-index: 1100;
-  height: 70px;
 }
 header .logo {
   font-weight: 900;
@@ -42,131 +41,61 @@ header .logo {
 }
 nav {
   display: flex;
-  gap: 30px; /* espaçamento entre links */
-  margin-left: 0;
+  gap: 30px;
 }
 nav a {
   color: #dbe4ff;
   text-decoration: none;
   font-weight: 600;
   cursor: pointer;
-  margin-left: 0px;
-  padding: 0;
-  transition: none; /* remove efeito hover */
 }
 nav a:hover,
 nav a:focus-visible {
-  color: #dbe4ff; /* cor constante, sem alteração */
+  color: #dbe4ff;
   outline: none;
 }
 
-/* Main e conteúdo */
+/* ===== Main ===== */
 main {
-  max-width: 1080px;
-  margin: 40px auto 60px;
-  padding: 0 20px;
   flex-grow: 1;
-}
-
-/* Títulos */
-h1 {
-  color: #3b5bdb;
-  text-align: center;
-  margin-bottom: 32px;
-  user-select: none;
-}
-
-/* Cards */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 28px;
-}
-.card {
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 8px 28px rgba(59, 91, 219, 0.12);
-  padding: 24px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: transform 0.25s ease, box-shadow 0.3s ease;
-  user-select: none;
-  text-decoration: none;
-  color: inherit;
-}
-.card:hover,
-.card:focus-visible {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 38px rgba(59, 91, 219, 0.25);
-  outline: none;
-}
-.card h2 {
-  margin: 0 0 12px;
-  color: #2245a8;
-  font-size: 1.3rem;
-}
-.card p {
-  margin: 0;
-  color: #334e68;
-  line-height: 1.4;
-  font-size: 1rem;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 16px 10px;
-  font-size: 0.9rem;
-  color: #3b5bdb;
-  user-select: none;
-}
-
-/* Container geral */
-main#appContainer {
-  flex-grow: 1;
-  display: flex;
-  padding: 20px;
-  gap: 20px;
   max-width: 1100px;
-  margin: 0 auto 40px auto;
+  margin: 40px auto;
+  padding: 0 20px;
+  display: flex;
+  gap: 20px;
 }
 
-/* Sidebar */
+/* ===== Sidebar ===== */
 aside#sidebar {
   width: 280px;
   background: #3b5bdb;
   color: #e0e7ff;
-  padding: 20px 20px 40px;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 2px 0 12px rgba(0,0,0,0.3);
-  user-select: none;
   display: flex;
   flex-direction: column;
+  user-select: none;
 }
 aside#sidebar h2 {
-  margin-top: 0;
   font-weight: 900;
   font-size: 1.8rem;
-  letter-spacing: 2px;
   margin-bottom: 16px;
 }
-label {
+aside#sidebar label {
   font-weight: 700;
   margin-top: 20px;
   margin-bottom: 6px;
   display: block;
 }
-select, input[type="text"] {
+aside#sidebar select,
+aside#sidebar input[type="text"] {
   width: 100%;
   padding: 8px 10px;
   border-radius: 6px;
   border: none;
   font-size: 1rem;
 }
-
-/* Botão adicionar */
 button#addResourceBtn {
   margin-top: auto;
   background: #2245a8;
@@ -183,7 +112,7 @@ button#addResourceBtn:hover {
   background: #1a357f;
 }
 
-/* Conteúdo principal */
+/* ===== Content ===== */
 section#content {
   flex-grow: 1;
   background: white;
@@ -191,7 +120,6 @@ section#content {
   padding: 20px 24px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
   overflow-y: auto;
-  max-height: 80vh;
 }
 section#content h2 {
   margin-top: 0;
@@ -233,8 +161,6 @@ section#content h2 {
 .resource-link a:hover {
   text-decoration: underline;
 }
-
-/* Botão remover recurso */
 .remove-btn {
   position: absolute;
   top: 14px;
@@ -247,14 +173,59 @@ section#content h2 {
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.3s, opacity 0.3s;
   opacity: 0;
+  transition: background-color 0.3s, opacity 0.3s;
 }
 .remove-btn:hover {
   background: #d04a4a;
 }
 
-/* Modal para adicionar recurso */
+/* ===== Cards ===== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(59, 91, 219, 0.12);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 38px rgba(59, 91, 219, 0.25);
+}
+.card h2 {
+  margin: 0 0 12px;
+  color: #2245a8;
+  font-size: 1.3rem;
+}
+.card p {
+  margin: 0;
+  color: #334e68;
+  line-height: 1.4;
+  font-size: 1rem;
+}
+
+/* ===== Footer ===== */
+footer {
+  text-align: center;
+  padding: 16px 10px;
+  font-size: 0.9rem;
+  color: #3b5bdb;
+  user-select: none;
+}
+
+/* ===== Modal ===== */
 #modalOverlay {
   position: fixed;
   top: 0; left: 0;
@@ -265,9 +236,7 @@ section#content h2 {
   align-items: center;
   z-index: 1500;
 }
-#modalOverlay.active {
-  display: flex;
-}
+#modalOverlay.active { display: flex; }
 #modal {
   background: white;
   border-radius: 12px;
@@ -282,31 +251,20 @@ section#content h2 {
   margin-bottom: 20px;
   color: #2245a8;
 }
-#modal label {
-  display: block;
-  margin-top: 14px;
-  font-weight: 700;
-}
-#modal input[type="text"],
-#modal textarea,
-#modal select,
-#fileDropZone {
+#modal input, #modal select, #modal textarea {
   width: 100%;
   padding: 8px 10px;
   margin-top: 6px;
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 1rem;
-  resize: vertical;
 }
-#modal textarea {
-  min-height: 80px;
-}
+#modal textarea { min-height: 80px; }
 #modalButtons {
-  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+  margin-top: 20px;
 }
 #modalButtons button {
   padding: 8px 14px;
@@ -315,22 +273,12 @@ section#content h2 {
   border: none;
   cursor: pointer;
 }
-#btnCancel {
-  background: #ccc;
-  color: #444;
-}
-#btnCancel:hover {
-  background: #b3b3b3;
-}
-#btnSave {
-  background: #2245a8;
-  color: #e0e7ff;
-}
-#btnSave:hover {
-  background: #1a357f;
-}
+#btnCancel { background: #ccc; color: #444; }
+#btnCancel:hover { background: #b3b3b3; }
+#btnSave { background: #2245a8; color: #e0e7ff; }
+#btnSave:hover { background: #1a357f; }
 
-/* Drag & Drop */
+/* ===== Drag & Drop ===== */
 #fileDropZone {
   border: 2px dashed #3b5bdb;
   height: 80px;
@@ -352,68 +300,48 @@ section#content h2 {
   margin-top: 6px;
   margin-bottom: 14px;
   min-height: 20px;
-  display: block;
   word-break: break-word;
 }
 
-/* Esconde input file nativo */
-#modal input[type="file"] {
-  display: none;
-}
-
-/* Mobile tweaks */
-@media (max-width: 500px) {
-  header {
+/* ===== Mobile / Tablet ===== */
+@media (max-width: 768px) {
+  main {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    height: auto;
-  }
-  nav a {
-    margin-left: 0;
-    margin-right: 18px;
-  }
-  @media (max-width: 768px) {
-  main#appContainer {
-    flex-direction: column;
-    padding: 10px;
     gap: 16px;
   }
   aside#sidebar {
     width: 100%;
-    order: -1; /* aparece antes do conteúdo */
     border-radius: 8px;
     padding: 16px;
   }
-  section#content {
-    max-height: none;
-  }
+  section#content { max-height: none; }
+}
 
+/* ===== Mobile Sidebar ===== */
 @media (max-width: 500px) {
-  #sidebar {
-    position: fixed;
-    top: 70px;
-    left: -280px;
-    height: calc(100% - 70px);
-    z-index: 1200;
-    transition: left 0.3s ease;
-  }
-  #sidebar.active {
-    left: 0;
-  }
   #menuToggle {
+    display: block;
     position: fixed;
-    top: 16px;
-    left: 16px;
+    top: 12px;
+    left: 12px;
     font-size: 2rem;
     background: #3b5bdb;
     color: #e0e7ff;
-    padding: 8px 12px;
+    padding: 6px 10px;
     border-radius: 8px;
     cursor: pointer;
-    z-index: 1300;
-    user-select: none;
+    z-index: 1500;
   }
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    height: 100vh;
+    width: 280px;
+    transition: left 0.3s ease;
+    z-index: 1400;
+  }
+  #sidebar.active { left: 0; }
 }
 
 
@@ -768,7 +696,7 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-  <script>
+
 const menuToggle = document.createElement('div');
 menuToggle.id = 'menuToggle';
 menuToggle.innerHTML = '≡';
@@ -786,11 +714,12 @@ document.addEventListener('click', e => {
     sidebar.classList.remove('active');
   }
 });
-</script>
+
 
 </script>
 
 
 </body>
 </html>
+
 
