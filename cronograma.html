@@ -1,0 +1,710 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cronograma de Estudos Completo</title>
+<style>
+  /* ===== Reset básico ===== */
+* {
+  box-sizing: border-box;
+}
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+}
+body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    color: #222;
+}
+
+/* Body sem largura máxima, sem margem e padding */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.container {
+    flex: 1;
+    display: flex;
+    max-width: 900px;
+    margin: 40px auto 60px;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+ header {
+    background: #3b5bdb;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 10px rgba(59,91,219,0.3);
+    user-select: none;
+}
+
+
+/* Resto do CSS header igual antes */
+.logo {
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: #e0e7ff;
+  letter-spacing: 2px;
+  user-select: none;
+}
+
+main {
+    flex: 1;
+    margin-left: 28px;
+    display: flex;
+    flex-direction: column;
+}
+
+nav a {
+  color: #dbe4ff;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 24px;
+  transition: color 0.3s ease;
+  user-select: none;
+}
+
+nav a:hover,
+nav a:focus-visible {
+  color: #fff;
+  outline: none;
+}
+
+
+h1 {
+  text-align: center;
+  color: #3b5bdb;
+  margin-bottom: 30px;
+  user-select: none;
+}
+
+label {
+  font-weight: 600;
+  margin-top: 20px;
+  display: block;
+  color: #2e40af;
+  user-select: none;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1.5px solid #a3bffa;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 40px;
+  color: #334e68;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #3b5bdb;
+  box-shadow: 0 0 8px rgba(59, 91, 219, 0.4);
+  outline: none;
+  background-color: #f7faff;
+}
+
+textarea {
+  min-height: 70px;
+  line-height: 1.4;
+}
+
+.checkbox-group {
+  margin-top: 15px;
+  margin-bottom: 25px;
+}
+
+.checkbox-group label {
+  font-weight: 500;
+  margin-right: 18px;
+  display: inline-block;
+  color: #52796f;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dia-block {
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 8px rgba(59, 91, 219, 0.12);
+  margin-bottom: 25px;
+  transition: box-shadow 0.3s ease;
+}
+
+.dia-block:hover {
+  box-shadow: 0 6px 14px rgba(59, 91, 219, 0.22);
+}
+
+.dia-block h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #3b5bdb;
+  font-weight: 700;
+  font-size: 1.25rem;
+  user-select: none;
+}
+
+.bloco {
+  margin: 8px 0;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 600;
+  color: #334e68;
+  box-shadow: 0 1px 3px rgba(59, 91, 219, 0.1);
+  font-size: 1rem;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.peso-3 {
+  background-color: #dbe4ff; /* azul pastel bem suave */
+  color: #2245a8;
+}
+
+.peso-2 {
+  background-color: #fff7d6; /* amarelo pastel */
+  color: #9a7c00;
+}
+
+.peso-1 {
+  background-color: #d6f0ff; /* azul clarinho */
+  color: #1761a0;
+}
+
+.pausa {
+  background-color: #e6f0ff; /* azul muito claro */
+  font-style: italic;
+  color: #3b5bdb;
+  font-weight: 600;
+}
+
+.btn-group {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+button {
+  cursor: pointer;
+  padding: 14px 30px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #3b5bdb 0%, #2f49db 100%);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(59, 91, 219, 0.6);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #2f49db 0%, #2242a5 100%);
+  box-shadow: 0 8px 24px rgba(34, 66, 165, 0.75);
+}
+
+#preview {
+  margin-top: 40px;
+  padding: 30px 32px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 12px 38px rgba(59, 91, 219, 0.15);
+  max-height: 540px;
+  overflow-y: auto;
+  font-family: 'Courier New', Courier, monospace;
+  color: #334e68;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  font-size: 1rem;
+  user-select: text;
+}
+
+/* Responsivo */
+@media (max-width: 720px) {
+  .btn-group {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .dia-block {
+    padding: 16px 20px;
+  }
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  nav a {
+    margin-left: 0;
+    margin-right: 18px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EstudArt</div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="perfil.html">Perfil</a>
+  </nav>
+</header>
+
+<div class="container">
+ <main>
+  <h1>Cronograma de Estudos Completo</h1>
+
+  <label for="numDias">Quantos dias de cronograma (1 a 7)?</label>
+  <input type="number" id="numDias" min="1" max="7" value="1" />
+
+  <div id="checkboxOptions" class="checkbox-group" style="display:none;">
+    <label><input type="checkbox" id="mesmoHorario" /> Usar o mesmo horário para todos os dias</label>
+    <label><input type="checkbox" id="mesmasMaterias" /> Usar as mesmas matérias para todos os dias</label>
+  </div>
+
+  <label for="dataInicio">Data de início:</label>
+  <input type="date" id="dataInicio" />
+
+  <div id="diasContainer"></div>
+
+  <label for="usarPausa1">Deseja pausa?</label>
+  <select id="usarPausa1">
+    <option value="nao" selected>Não</option>
+    <option value="sim">Sim</option>
+  </select>
+
+  <div id="pausaTempoDiv" style="display:none;">
+    <label for="tempoPausa">Tempo da pausa (minutos):</label>
+    <input type="number" id="tempoPausa" min="10" max="120" step="10" value="10" onkeydown="return false" />
+  </div>
+
+  <div class="btn-group">
+    <button id="btnGerar">Gerar Cronograma</button>
+    <button id="btnDownload">Baixar Cronograma</button>
+    <button id="btnReset">Resetar</button>
+  </div>
+
+  <div id="preview"></div>
+
+ <script>
+  const numDiasInput = document.getElementById('numDias');
+  const diasContainer = document.getElementById('diasContainer');
+  const checkboxOptions = document.getElementById('checkboxOptions');
+  const mesmoHorarioCheckbox = document.getElementById('mesmoHorario');
+  const mesmasMateriasCheckbox = document.getElementById('mesmasMaterias');
+  const usarPausaSelect = document.getElementById('usarPausa1');
+  const pausaTempoDiv = document.getElementById('pausaTempoDiv');
+  const tempoPausaInput = document.getElementById('tempoPausa');
+  const preview = document.getElementById('preview');
+  const btnGerar = document.getElementById('btnGerar');
+  const btnReset = document.getElementById('btnReset');
+  const btnDownload = document.getElementById('btnDownload');
+
+  function atualizarInterface() {
+    const n = Number(numDiasInput.value);
+    if (n > 1) {
+      checkboxOptions.style.display = 'block';
+    } else {
+      checkboxOptions.style.display = 'none';
+      mesmoHorarioCheckbox.checked = false;
+      mesmasMateriasCheckbox.checked = false;
+    }
+    gerarCamposDias(n);
+  }
+
+  function gerarCamposDias(numDias) {
+    diasContainer.innerHTML = '';
+    for (let i = 0; i < numDias; i++) {
+      const div = document.createElement('div');
+      div.classList.add('dia-block');
+      div.dataset.dia = i + 1;
+      div.innerHTML = `
+        <h3>Dia ${i + 1}</h3>
+        <label>Horários (ex: 7:00-10:00 / 20:00-22:00)</label>
+        <input type="text" class="inputHorario" placeholder="7:00-10:00 / 20:00-22:00" />
+        <label>Matérias Muito Importantes (peso 3) - separadas por vírgula</label>
+        <textarea class="inputPeso3" placeholder="Ex: Matemática, Física"></textarea>
+        <label>Matérias Médias (peso 2) - separadas por vírgula</label>
+        <textarea class="inputPeso2" placeholder="Ex: História, Geografia"></textarea>
+        <label>Matérias Pouco Importantes (peso 1) - separadas por vírgula</label>
+        <textarea class="inputPeso1" placeholder="Ex: Artes, Educação Física"></textarea>
+      `;
+      diasContainer.appendChild(div);
+    }
+    copiarDadosSeMarcado();
+    adicionarEventosDeCopia();
+  }
+
+  function copiarDadosSeMarcado() {
+    if (!mesmoHorarioCheckbox.checked && !mesmasMateriasCheckbox.checked) return;
+    const n = Number(numDiasInput.value);
+    if (n < 2) return;
+    const primeiroDia = diasContainer.querySelector('.dia-block[data-dia="1"]');
+    const horarioRef = primeiroDia.querySelector('.inputHorario').value;
+    const p3Ref = primeiroDia.querySelector('.inputPeso3').value;
+    const p2Ref = primeiroDia.querySelector('.inputPeso2').value;
+    const p1Ref = primeiroDia.querySelector('.inputPeso1').value;
+
+    for (let i = 2; i <= n; i++) {
+      const diaDiv = diasContainer.querySelector(`.dia-block[data-dia="${i}"]`);
+      if (mesmoHorarioCheckbox.checked) {
+        diaDiv.querySelector('.inputHorario').value = horarioRef;
+      }
+      if (mesmasMateriasCheckbox.checked) {
+        diaDiv.querySelector('.inputPeso3').value = p3Ref;
+        diaDiv.querySelector('.inputPeso2').value = p2Ref;
+        diaDiv.querySelector('.inputPeso1').value = p1Ref;
+      }
+    }
+  }
+
+  function adicionarEventosDeCopia() {
+    const primeiroDia = diasContainer.querySelector('.dia-block[data-dia="1"]');
+    if (!primeiroDia) return;
+    const horarioInput = primeiroDia.querySelector('.inputHorario');
+    const p3Input = primeiroDia.querySelector('.inputPeso3');
+    const p2Input = primeiroDia.querySelector('.inputPeso2');
+    const p1Input = primeiroDia.querySelector('.inputPeso1');
+
+    horarioInput.addEventListener('input', () => {
+      if (mesmoHorarioCheckbox.checked) copiarDadosSeMarcado();
+    });
+    p3Input.addEventListener('input', () => {
+      if (mesmasMateriasCheckbox.checked) copiarDadosSeMarcado();
+    });
+    p2Input.addEventListener('input', () => {
+      if (mesmasMateriasCheckbox.checked) copiarDadosSeMarcado();
+    });
+    p1Input.addEventListener('input', () => {
+      if (mesmasMateriasCheckbox.checked) copiarDadosSeMarcado();
+    });
+  }
+
+  usarPausaSelect.addEventListener('change', () => {
+    pausaTempoDiv.style.display = usarPausaSelect.value === 'sim' ? 'block' : 'none';
+  });
+
+  numDiasInput.addEventListener('change', () => {
+    atualizarInterface();
+  });
+
+  mesmoHorarioCheckbox.addEventListener('change', copiarDadosSeMarcado);
+  mesmasMateriasCheckbox.addEventListener('change', copiarDadosSeMarcado);
+
+  // Funções auxiliares
+  function parseHora(h) {
+    if (!h) return null;
+    h = h.trim();
+    let partes = h.split(':');
+    if (partes.length === 1) partes.push('00');
+    if (partes.length !== 2) return null;
+    let hh = Number(partes[0]);
+    let mm = Number(partes[1]);
+    if (isNaN(hh) || isNaN(mm) || hh < 0 || hh > 23 || mm < 0 || mm > 59) return null;
+    return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  }
+
+  function diferencaMinutos(inicio, fim) {
+    let h1 = parseHora(inicio);
+    let h2 = parseHora(fim);
+    if (!h1 || !h2) return NaN;
+    let [hi, mi] = h1.split(':').map(Number);
+    let [hf, mf] = h2.split(':').map(Number);
+    return (hf * 60 + mf) - (hi * 60 + mi);
+  }
+
+  function somarMinutos(hora, minutos) {
+    let h = parseHora(hora);
+    if (!h) return null;
+    let [hh, mm] = h.split(':').map(Number);
+    mm += minutos;
+    hh += Math.floor(mm / 60);
+    mm = mm % 60;
+    if (hh >= 24) hh -= 24;
+    return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  }
+
+  function arredondarPara5Minutos(hora) {
+    let [hh, mm] = hora.split(':').map(Number);
+    mm = Math.round(mm / 5) * 5;
+    if (mm === 60) {
+      mm = 0;
+      hh = (hh + 1) % 24;
+    }
+    return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
+  }
+
+  function parseTurnos(horariosStr) {
+    if (!horariosStr) return [];
+    return horariosStr.split('/').map(t => t.trim()).filter(t => t.length > 0);
+  }
+
+  // Distribui matérias no turno proporcional ao peso e arredonda horários
+  function distribuirMaterias(inicio, fim, materias) {
+    const blocos = [];
+    let totalMin = diferencaMinutos(inicio, fim);
+    if (isNaN(totalMin) || totalMin <= 0) return blocos;
+
+    const totalPeso = materias.reduce((acc, m) => acc + m.peso, 0);
+    if (totalPeso === 0) return blocos;
+
+    let minutosUsados = 0;
+    for (let i = 0; i < materias.length; i++) {
+      let m = materias[i];
+      let tempo = Math.round((m.peso / totalPeso) * totalMin);
+      if (i === materias.length - 1) {
+        tempo = totalMin - minutosUsados;
+      }
+      let inicioRaw = somarMinutos(inicio, minutosUsados);
+      let fimRaw = somarMinutos(inicioRaw, tempo);
+      let inicioA = arredondarPara5Minutos(inicioRaw);
+      let fimA = arredondarPara5Minutos(fimRaw);
+
+      blocos.push({ materia: m.nome, peso: m.peso, inicio: inicioA, fim: fimA });
+      minutosUsados += tempo;
+    }
+    return blocos;
+  }
+
+  // Função principal para calcular blocos com pausas internas nos turnos
+  function calcularBlocos(horariosStr, materias, tempoPausa) {
+    const blocos = [];
+    const turnos = parseTurnos(horariosStr);
+    if (turnos.length === 0) return blocos;
+
+    for (let i = 0; i < turnos.length; i++) {
+      const t = turnos[i];
+      const [inicioRaw, fimRaw] = t.split('-').map(s => s.trim());
+      const inicio = parseHora(inicioRaw);
+      const fim = parseHora(fimRaw);
+      if (!inicio || !fim) continue;
+
+      const duracao = diferencaMinutos(inicio, fim);
+      if (isNaN(duracao) || duracao <= 0) continue;
+
+      if (tempoPausa > 0 && tempoPausa < duracao) {
+        // Pausa no meio do turno
+        const meio = Math.floor(duracao / 2);
+        const pausaInicio = somarMinutos(inicio, meio - Math.floor(tempoPausa / 2));
+        const pausaFim = somarMinutos(pausaInicio, tempoPausa);
+
+        // Tempo antes da pausa
+        const tempoAntesPausa = diferencaMinutos(inicio, pausaInicio);
+        // Tempo depois da pausa
+        const tempoDepoisPausa = diferencaMinutos(pausaFim, fim);
+
+        // Distribuir matérias antes da pausa
+        const materiasAntes = distribuirMaterias(inicio, pausaInicio, materias);
+        // Pausa
+        const blocoPausa = {
+          materia: 'Pausa',
+          peso: 0,
+          inicio: pausaInicio,
+          fim: pausaFim,
+          pausa: true
+        };
+        // Distribuir matérias depois da pausa
+        const materiasDepois = distribuirMaterias(pausaFim, fim, materias);
+
+        blocos.push(...materiasAntes);
+        blocos.push(blocoPausa);
+        blocos.push(...materiasDepois);
+
+      } else {
+        // Sem pausa ou pausa maior que o turno: distribui matérias normalmente
+        const materiasTurno = distribuirMaterias(inicio, fim, materias);
+        blocos.push(...materiasTurno);
+      }
+    }
+    return blocos;
+  }
+
+  // Função para gerar o cronograma no preview
+  function gerarCronograma() {
+    preview.innerHTML = '';
+    const n = Number(numDiasInput.value);
+    if (n < 1 || n > 7) {
+      alert('Número de dias inválido! Deve ser entre 1 e 7.');
+      return;
+    }
+    const usarPausa = usarPausaSelect.value === 'sim' ? Number(tempoPausaInput.value) : 0;
+    const mesmoHorario = mesmoHorarioCheckbox.checked;
+    const mesmasMaterias = mesmasMateriasCheckbox.checked;
+
+    const dias = [];
+    for (let i = 0; i < n; i++) {
+      const diaDiv = diasContainer.querySelector(`.dia-block[data-dia="${i + 1}"]`);
+      if (!diaDiv) continue;
+      let horario = diaDiv.querySelector('.inputHorario').value.trim();
+      let p3txt = diaDiv.querySelector('.inputPeso3').value.trim();
+      let p2txt = diaDiv.querySelector('.inputPeso2').value.trim();
+      let p1txt = diaDiv.querySelector('.inputPeso1').value.trim();
+
+      if (i > 0 && mesmoHorario) horario = dias[0].horario;
+      if (i > 0 && mesmasMaterias) {
+        dias.push({ horario, materias: dias[0].materias });
+        continue;
+      }
+
+      const materias = [];
+      if (p3txt) p3txt.split(',').map(s => s.trim()).filter(Boolean).forEach(m => materias.push({ nome: m, peso: 3 }));
+      if (p2txt) p2txt.split(',').map(s => s.trim()).filter(Boolean).forEach(m => materias.push({ nome: m, peso: 2 }));
+      if (p1txt) p1txt.split(',').map(s => s.trim()).filter(Boolean).forEach(m => materias.push({ nome: m, peso: 1 }));
+
+      dias.push({ horario, materias });
+    }
+
+    // Se checkbox marcado, copia os valores do primeiro dia para os demais
+    for (let i = 0; i < n; i++) {
+      if (!dias[i].horario) dias[i].horario = dias[0].horario;
+      if (!dias[i].materias) dias[i].materias = dias[0].materias;
+    }
+
+    for (let i = 0; i < n; i++) {
+      const dia = dias[i];
+      const blocoDia = document.createElement('div');
+      blocoDia.classList.add('dia-block');
+      blocoDia.innerHTML = `<h2>Dia ${i + 1}</h2>`;
+
+      if (!dia.horario) {
+        blocoDia.innerHTML += '<p style="color:red;">Horário não definido</p>';
+        preview.appendChild(blocoDia);
+        continue;
+      }
+      if (!dia.materias || dia.materias.length === 0) {
+        blocoDia.innerHTML += '<p style="color:red;">Nenhuma matéria informada</p>';
+        preview.appendChild(blocoDia);
+        continue;
+      }
+
+      const blocosDia = calcularBlocos(dia.horario, dia.materias, usarPausa);
+      if (blocosDia.length === 0) {
+        blocoDia.innerHTML += '<p style="color:red;">Erro no cálculo do cronograma</p>';
+        preview.appendChild(blocoDia);
+        continue;
+      }
+
+      blocosDia.forEach(b => {
+        const div = document.createElement('div');
+        div.classList.add('bloco');
+        if (b.pausa) {
+          div.classList.add('pausa');
+          div.textContent = `${b.inicio} - ${b.fim}: Pausa (${usarPausa} min)`;
+        } else {
+          div.classList.add(`peso-${b.peso}`);
+          div.textContent = `${b.inicio} - ${b.fim}: ${b.materia}`;
+        }
+        blocoDia.appendChild(div);
+      });
+
+      preview.appendChild(blocoDia);
+    }
+  }
+
+  // Download simples do cronograma em txt
+  function baixarCronograma() {
+    let texto = `Cronograma de Estudos - gerado em ${new Date().toLocaleString()}\n\n`;
+    const dias = preview.querySelectorAll('.dia-block');
+    if (dias.length === 0) {
+      alert('Gere o cronograma primeiro.');
+      return;
+    }
+    dias.forEach(dia => {
+      texto += dia.querySelector('h2').textContent + '\n';
+      dia.querySelectorAll('.bloco').forEach(b => {
+        texto += `  ${b.textContent}\n`;
+      });
+      texto += '\n';
+    });
+
+    const blob = new Blob([texto], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'cronograma_estudos.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  btnGerar.addEventListener('click', gerarCronograma);
+  btnReset.addEventListener('click', () => location.reload());
+  btnDownload.addEventListener('click', baixarCronograma);
+
+  // Inicializa interface
+  atualizarInterface();
+
+  if(Notification && Notification.permission !== "granted"){
+    Notification.requestPermission();
+  }
+
+  // Checa a cada segundo se o cronômetro terminou
+  setInterval(() => {
+    const fimSalvo = localStorage.getItem("cronometroFim");
+    if(fimSalvo){
+      const fim = parseInt(fimSalvo);
+      const agora = Date.now();
+      if(agora >= fim){
+        // Remove o cronômetro salvo
+        localStorage.removeItem("cronometroFim");
+        localStorage.removeItem("cronometroPausado");
+
+        // Notificação
+        if(Notification.permission === "granted"){
+          new Notification("⏰ Tempo encerrado!", { body: "Seu cronômetro acabou!" });
+        } else {
+          alert("⏰ Tempo encerrado!");
+        }
+      }
+    }
+  }, 1000);
+  
+ </script>
+ </main>
+</div>
+
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert("⚠️ Clique direito desabilitado neste site!");
+});
+</script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
+    e.preventDefault();
+    alert("⚠️ Esta ação não é permitida no site!");
+  }
+});
+</script>
+
+</body>
+</html>

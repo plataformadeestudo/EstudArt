@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sobre Nós - EstudArt</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    color: #222;
+  }
+
+  header {
+    background: #3b5bdb;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 10px rgba(59,91,219,0.3);
+  }
+
+  .logo {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #e0e7ff;
+    letter-spacing: 2px;
+  }
+
+  nav a {
+    color: #dbe4ff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 24px;
+    transition: color 0.3s ease;
+  }
+
+  nav a:hover,
+  nav a:focus-visible {
+    color: #fff;
+    outline: none;
+  }
+
+  main {
+    max-width: 1080px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #3b5bdb;
+    font-size: 2rem;
+    margin-bottom: 40px;
+  }
+
+  .section {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(59,91,219,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+    margin-bottom: 30px;
+    gap: 30px;
+  }
+
+  .section:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .text {
+    flex: 1;
+  }
+
+  .text h2 {
+    color: #2245a8;
+    margin-bottom: 10px;
+  }
+
+  .text p {
+    color: #334e68;
+    line-height: 1.6;
+  }
+
+  .icon {
+    font-size: 3rem;
+    color: #3b5bdb;
+    flex-shrink: 0;
+  }
+
+  footer {
+    text-align: center;
+    padding: 16px 10px;
+    font-size: 0.9rem;
+    color: #3b5bdb;
+    user-select: none;
+  }
+
+  @media (max-width: 768px) {
+    .section {
+      flex-direction: column;
+      text-align: center;
+    }
+    .icon {
+      margin-bottom: 10px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EstudArt</div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="perfil.html">Perfil</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Sobre o EstudArt</h1>
+
+  <div class="section">
+    <div class="icon">🎯</div>
+    <div class="text">
+      <h2>Nosso Propósito</h2>
+      <p>
+        O <strong>EstudArt</strong> nasceu com o objetivo de ajudar estudantes a melhorarem suas notas
+        por meio de ferramentas práticas, inspiradoras e totalmente gratuitas.  
+        Muitas plataformas oferecem recursos parecidos, mas quase sempre pagos — por isso,
+        criamos um espaço onde todos podem aprender e se organizar sem custo algum.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="icon">💙</div>
+    <div class="text">
+      <h2>Nossa Missão</h2>
+      <p>
+        A missão do EstudArt é <strong>tornar o ensino gratuito e acessível para todos</strong>.
+        Acreditamos que educação de qualidade não deve ser privilégio, e sim um direito.
+        Cada recurso do site foi pensado para tornar o aprendizado mais simples,
+        leve e eficaz — seja por meio de cronogramas, flashcards, mapas mentais ou outras ferramentas.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="icon">👩‍💻</div>
+    <div class="text">
+      <h2>Quem Criou</h2>
+      <p>
+        O projeto foi criado por <strong>Joana Bichet Rocha</strong>, uma estudante apaixonada por
+        educação e tecnologia.  
+        Depois de enfrentar desafios para se organizar nos estudos e descobrir ferramentas que a ajudaram
+        a alcançar melhores resultados, Joana decidiu compartilhar esse conhecimento com outros jovens.
+        Assim surgiu o EstudArt — feito de estudante para estudante.
+      </p>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="icon">🌍</div>
+    <div class="text">
+      <h2>Nosso Sonho</h2>
+      <p>
+        Queremos construir uma comunidade onde aprender seja sinônimo de liberdade e propósito.
+        O EstudArt continua evoluindo com novas ideias, recursos e colaborações —
+        sempre com o mesmo ideal: <strong>educação gratuita, acessível e inspiradora</strong>.
+      </p>
+    </div>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 EstudArt • Criado por Joana Bichet Rocha. Todos os direitos reservados <a href="termos.html">Termos de Uso</a>
+</footer>
+
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert("⚠️ Clique direito desabilitado neste site!");
+});
+</script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
+    e.preventDefault();
+    alert("⚠️ Esta ação não é permitida no site!");
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,732 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Biblioteca de Recursos - MeuSite</title>
+<style>
+  /* Reset básico */
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f4ff;
+  color: #222;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+header {
+  background: #3b5bdb;
+  padding: 16px 24px; /* Espaçamento para altura 70px */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 3px 10px rgba(59, 91, 219, 0.3);
+  user-select: none;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  height: 70px;
+}
+header .logo {
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: #e0e7ff;
+  letter-spacing: 2px;
+}
+nav {
+  display: flex;
+  gap: 30px; /* espaçamento entre links */
+  margin-left: 0;
+}
+nav a {
+  color: #dbe4ff;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 0px;
+  padding: 0;
+  transition: none; /* remove efeito hover */
+}
+nav a:hover,
+nav a:focus-visible {
+  color: #dbe4ff; /* cor constante, sem alteração */
+  outline: none;
+}
+
+/* Main e conteúdo */
+main {
+  max-width: 1080px;
+  margin: 40px auto 60px;
+  padding: 0 20px;
+  flex-grow: 1;
+}
+
+/* Títulos */
+h1 {
+  color: #3b5bdb;
+  text-align: center;
+  margin-bottom: 32px;
+  user-select: none;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+}
+.card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(59, 91, 219, 0.12);
+  padding: 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.25s ease, box-shadow 0.3s ease;
+  user-select: none;
+  text-decoration: none;
+  color: inherit;
+}
+.card:hover,
+.card:focus-visible {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 38px rgba(59, 91, 219, 0.25);
+  outline: none;
+}
+.card h2 {
+  margin: 0 0 12px;
+  color: #2245a8;
+  font-size: 1.3rem;
+}
+.card p {
+  margin: 0;
+  color: #334e68;
+  line-height: 1.4;
+  font-size: 1rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 16px 10px;
+  font-size: 0.9rem;
+  color: #3b5bdb;
+  user-select: none;
+}
+
+/* Container geral */
+main#appContainer {
+  flex-grow: 1;
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto 40px auto;
+}
+
+/* Sidebar */
+aside#sidebar {
+  width: 280px;
+  background: #3b5bdb;
+  color: #e0e7ff;
+  padding: 20px 20px 40px;
+  border-radius: 10px;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.3);
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+}
+aside#sidebar h2 {
+  margin-top: 0;
+  font-weight: 900;
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+label {
+  font-weight: 700;
+  margin-top: 20px;
+  margin-bottom: 6px;
+  display: block;
+}
+select, input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+/* Botão adicionar */
+button#addResourceBtn {
+  margin-top: auto;
+  background: #2245a8;
+  border: none;
+  color: #e0e7ff;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+button#addResourceBtn:hover {
+  background: #1a357f;
+}
+
+/* Conteúdo principal */
+section#content {
+  flex-grow: 1;
+  background: white;
+  border-radius: 10px;
+  padding: 20px 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+  overflow-y: auto;
+  max-height: 80vh;
+}
+section#content h2 {
+  margin-top: 0;
+  font-weight: 900;
+  color: #2245a8;
+}
+#resourceList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#resourceList li {
+  border-bottom: 1px solid #e0e7ff;
+  padding: 14px 0;
+  position: relative;
+}
+#resourceList li:last-child {
+  border-bottom: none;
+}
+#resourceList li:hover .remove-btn {
+  opacity: 1;
+}
+.resource-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #2245a8;
+  margin-bottom: 4px;
+}
+.resource-desc {
+  font-size: 0.95rem;
+  color: #6678b1;
+  margin-bottom: 6px;
+}
+.resource-link a {
+  color: #3b5bdb;
+  font-weight: 600;
+  text-decoration: none;
+}
+.resource-link a:hover {
+  text-decoration: underline;
+}
+
+/* Botão remover recurso */
+.remove-btn {
+  position: absolute;
+  top: 14px;
+  right: 0;
+  background: #bb2f2f;
+  border: none;
+  color: white;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s, opacity 0.3s;
+  opacity: 0;
+}
+.remove-btn:hover {
+  background: #d04a4a;
+}
+
+/* Modal para adicionar recurso */
+#modalOverlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1500;
+}
+#modalOverlay.active {
+  display: flex;
+}
+#modal {
+  background: white;
+  border-radius: 12px;
+  width: 360px;
+  max-width: 90vw;
+  padding: 24px 28px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+#modal h3 {
+  margin-top: 0;
+  font-weight: 900;
+  margin-bottom: 20px;
+  color: #2245a8;
+}
+#modal label {
+  display: block;
+  margin-top: 14px;
+  font-weight: 700;
+}
+#modal input[type="text"],
+#modal textarea,
+#modal select,
+#fileDropZone {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  resize: vertical;
+}
+#modal textarea {
+  min-height: 80px;
+}
+#modalButtons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+#modalButtons button {
+  padding: 8px 14px;
+  font-weight: 700;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+#btnCancel {
+  background: #ccc;
+  color: #444;
+}
+#btnCancel:hover {
+  background: #b3b3b3;
+}
+#btnSave {
+  background: #2245a8;
+  color: #e0e7ff;
+}
+#btnSave:hover {
+  background: #1a357f;
+}
+
+/* Drag & Drop */
+#fileDropZone {
+  border: 2px dashed #3b5bdb;
+  height: 80px;
+  line-height: 80px;
+  text-align: center;
+  color: #3b5bdb;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+  margin-bottom: 10px;
+}
+#fileDropZone.dragover {
+  background: #e0e7ff;
+  border-color: #2245a8;
+}
+#fileDropMsg {
+  font-size: 0.85rem;
+  color: #6678b1;
+  margin-top: 6px;
+  margin-bottom: 14px;
+  min-height: 20px;
+  display: block;
+  word-break: break-word;
+}
+
+/* Esconde input file nativo */
+#modal input[type="file"] {
+  display: none;
+}
+
+/* Mobile tweaks */
+@media (max-width: 500px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    height: auto;
+  }
+  nav a {
+    margin-left: 0;
+    margin-right: 18px;
+  }
+}
+
+
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="logo">EstudArt</div>
+  <nav role="navigation" aria-label="Menu principal">
+    <a href="index.html" tabindex="0">Início</a>
+    <a href="perfil.html">Perfil</a>
+    
+  </nav>
+</header>
+
+<main id="appContainer" role="main" aria-label="Biblioteca de Recursos">
+
+  <aside id="sidebar" aria-label="Filtros e controle de recursos">
+    <h2>Biblioteca</h2>
+
+    <label for="categoryFilter">Filtrar por categoria</label>
+    <select id="categoryFilter" aria-controls="resourceList">
+      <option value="all">Todas</option>
+      <option value="video">Vídeo</option>
+      <option value="pdf">PDF</option>
+      <option value="link">Link</option>
+      <option value="document">Documento</option>
+      <option value="artigo">Artigo</option>
+    </select>
+
+    <label for="searchInput">Buscar recursos</label>
+    <input type="text" id="searchInput" placeholder="Digite palavras-chave" aria-controls="resourceList" />
+
+    <button id="addResourceBtn" aria-haspopup="dialog" aria-controls="modal">Adicionar Recurso</button>
+  </aside>
+
+  <section id="content" aria-label="Lista de recursos disponíveis">
+    <h2>Recursos</h2>
+    <ul id="resourceList" tabindex="0" aria-live="polite" aria-relevant="additions"></ul>
+  </section>
+
+</main>
+
+<!-- Modal -->
+<div id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div id="modal">
+    <h3 id="modalTitle">Adicionar Recurso</h3>
+    <form id="resourceForm">
+      <label for="resourceTitle">Título</label>
+      <input type="text" id="resourceTitle" required maxlength="100" />
+
+      <label for="resourceDesc">Descrição</label>
+      <textarea id="resourceDesc" maxlength="250" placeholder="Opcional"></textarea>
+
+      <label for="resourceCategory">Categoria</label>
+      <select id="resourceCategory" required>
+        <option value="" disabled selected>Selecione a categoria</option>
+        <option value="video">Vídeo</option>
+        <option value="pdf">PDF</option>
+        <option value="link">Link</option>
+        <option value="document">Documento</option>
+        <option value="artigo">Artigo</option>
+      </select>
+
+      <label>Arquivo (arraste ou clique para selecionar)</label>
+      <div id="fileDropZone" tabindex="0"></div>
+      <input type="file" id="fileInput" style="display:none" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.mp4,.mp3" />
+
+      <div id="fileDropMsg"></div>
+
+      <label for="resourceURL">Ou insira o URL (link) do recurso</label>
+      <input type="url" id="resourceURL" placeholder="https://exemplo.com" />
+
+      <div id="modalButtons">
+        <button type="button" id="btnCancel">Cancelar</button>
+        <button type="submit" id="btnSave">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Carrega do LocalStorage ou usa os recursos padrão
+  let resources = JSON.parse(localStorage.getItem('resources')) || [
+    { id: 1, title: 'Khan Academy - Álgebra', desc: 'Curso gratuito de álgebra básica.', category: 'video', url: 'https://www.khanacademy.org/math/algebra', isFile: false },
+    { id: 2, title: 'Apostila de História', desc: 'Apostila para o ENEM 2024.', category: 'pdf', url: 'https://exemplo.com/apostila-historia.pdf', isFile: false },
+    { id: 3, title: 'Site do ENEM', desc: 'Informações oficiais sobre o ENEM.', category: 'link', url: 'https://enem.inep.gov.br', isFile: false },
+  ];
+
+  const resourceList = document.getElementById('resourceList');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const searchInput = document.getElementById('searchInput');
+  const addResourceBtn = document.getElementById('addResourceBtn');
+  const modalOverlay = document.getElementById('modalOverlay');
+  const resourceForm = document.getElementById('resourceForm');
+  const btnCancel = document.getElementById('btnCancel');
+
+  const fileDropZone = document.getElementById('fileDropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileDropMsg = document.getElementById('fileDropMsg');
+
+  let uploadedFile = null; // Guarda o arquivo carregado em base64
+  let uploadedFileName = '';
+
+  // Funções de LocalStorage
+  function saveToLocalStorage() {
+    localStorage.setItem('resources', JSON.stringify(resources));
+  }
+
+  // Renderiza a lista de recursos
+  function renderResources() {
+    const filterCat = categoryFilter.value;
+    const searchTerm = searchInput.value.trim().toLowerCase();
+
+    resourceList.innerHTML = '';
+
+    const filtered = resources.filter(r => {
+      const matchCategory = filterCat === 'all' || r.category === filterCat;
+      const matchSearch = r.title.toLowerCase().includes(searchTerm) || (r.desc && r.desc.toLowerCase().includes(searchTerm));
+      return matchCategory && matchSearch;
+    });
+
+    if (filtered.length === 0) {
+      resourceList.innerHTML = '<li>Nenhum recurso encontrado.</li>';
+      return;
+    }
+
+    filtered.forEach(r => {
+      const li = document.createElement('li');
+
+      const title = document.createElement('div');
+      title.className = 'resource-title';
+      title.textContent = r.title;
+
+      const desc = document.createElement('div');
+      desc.className = 'resource-desc';
+      desc.textContent = r.desc || '';
+
+      const link = document.createElement('div');
+      link.className = 'resource-link';
+      const a = document.createElement('a');
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.textContent = 'Abrir recurso';
+
+      if (r.isFile && r.url.startsWith('data:')) {
+        // arquivo base64, link para download ou abrir
+        a.href = r.url;
+        a.download = r.title || 'arquivo';
+      } else {
+        a.href = r.url;
+      }
+
+      link.appendChild(a);
+
+      // Botão remover
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.textContent = 'Remover';
+      removeBtn.setAttribute('aria-label', `Remover recurso ${r.title}`);
+      removeBtn.addEventListener('click', () => {
+        if (confirm(`Confirma a remoção do recurso "${r.title}"?`)) {
+          const index = resources.findIndex(item => item.id === r.id);
+          if (index > -1) {
+            resources.splice(index, 1);
+            saveToLocalStorage();
+            renderResources();
+          }
+        }
+      });
+
+      li.appendChild(title);
+      if (r.desc) li.appendChild(desc);
+      li.appendChild(link);
+      li.appendChild(removeBtn);
+
+      resourceList.appendChild(li);
+    });
+  }
+
+  // Eventos filtro e busca
+  categoryFilter.addEventListener('change', renderResources);
+  searchInput.addEventListener('input', renderResources);
+
+  // Mostrar modal
+  addResourceBtn.addEventListener('click', () => {
+    modalOverlay.classList.add('active');
+    resourceForm.reset();
+    fileDropMsg.textContent = '';
+    uploadedFile = null;
+    uploadedFileName = '';
+    resourceURL.value = '';
+    document.getElementById('resourceTitle').focus();
+  });
+
+  // Fechar modal cancelar
+  btnCancel.addEventListener('click', () => {
+    modalOverlay.classList.remove('active');
+  });
+
+  // Fechar modal ao clicar fora
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) {
+      modalOverlay.classList.remove('active');
+    }
+  });
+
+  // Drag & Drop eventos para fileDropZone
+  fileDropZone.addEventListener('click', () => fileInput.click());
+
+  fileDropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    fileDropZone.classList.add('dragover');
+  });
+  fileDropZone.addEventListener('dragleave', e => {
+    e.preventDefault();
+    fileDropZone.classList.remove('dragover');
+  });
+  fileDropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    fileDropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+      handleFileUpload(e.dataTransfer.files[0]);
+    }
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files.length > 0) {
+      handleFileUpload(fileInput.files[0]);
+    }
+  });
+
+  function handleFileUpload(file) {
+    if (file.size > 20 * 1024 * 1024) { // 20MB limite
+      alert('Arquivo muito grande (máx 20MB).');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      uploadedFile = reader.result; // base64
+      uploadedFileName = file.name;
+      fileDropMsg.textContent = `Arquivo carregado: ${file.name}`;
+      resourceURL.value = ''; // limpa o URL pois tem arquivo
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Validação simples de URL
+  function isValidURL(string) {
+    try {
+      new URL(string);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  // Submit form
+  resourceForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('resourceTitle').value.trim();
+    const desc = document.getElementById('resourceDesc').value.trim();
+    const category = document.getElementById('resourceCategory').value;
+    let url = document.getElementById('resourceURL').value.trim();
+
+    if (!title || !category) {
+      alert('Preencha título e categoria.');
+      return;
+    }
+
+    if (uploadedFile) {
+      // Salvando arquivo base64 no recurso
+      resources.push({
+        id: Date.now(),
+        title,
+        desc,
+        category,
+        url: uploadedFile,
+        isFile: true,
+        fileName: uploadedFileName
+      });
+    } else if (url) {
+      if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+      }
+      if (!isValidURL(url)) {
+        alert('Por favor, insira um URL válido.');
+        return;
+      }
+      resources.push({
+        id: Date.now(),
+        title,
+        desc,
+        category,
+        url,
+        isFile: false
+      });
+    } else {
+      alert('Por favor, envie um arquivo ou insira um URL.');
+      return;
+    }
+
+    saveToLocalStorage();
+    renderResources();
+    modalOverlay.classList.remove('active');
+  });
+
+  // Inicial
+  renderResources();
+
+  if(Notification && Notification.permission !== "granted"){
+    Notification.requestPermission();
+  }
+
+  // Checa a cada segundo se o cronômetro terminou
+  setInterval(() => {
+    const fimSalvo = localStorage.getItem("cronometroFim");
+    if(fimSalvo){
+      const fim = parseInt(fimSalvo);
+      const agora = Date.now();
+      if(agora >= fim){
+        // Remove o cronômetro salvo
+        localStorage.removeItem("cronometroFim");
+        localStorage.removeItem("cronometroPausado");
+
+        // Notificação
+        if(Notification.permission === "granted"){
+          new Notification("⏰ Tempo encerrado!", { body: "Seu cronômetro acabou!" });
+        } else {
+          alert("⏰ Tempo encerrado!");
+        }
+      }
+    }
+  }, 1000);
+  
+</script>
+
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert("⚠️ Clique direito desabilitado neste site!");
+});
+</script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
+    e.preventDefault();
+    alert("⚠️ Esta ação não é permitida no site!");
+  }
+});
+</script>
+
+
+</body>
+</html>

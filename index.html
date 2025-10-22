@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MeuSite - Central</title>
+<style>
+  
+  /* Reset */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: #3b5bdb;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 10px rgba(59,91,219,0.3);
+    user-select: none;
+  }
+  .logo {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #e0e7ff;
+    letter-spacing: 2px;
+  }
+  nav a {
+    color: #dbe4ff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 24px;
+    transition: color 0.3s ease;
+  }
+  nav a:hover,
+  nav a:focus-visible {
+    color: #fff;
+    outline: none;
+  }
+  main {
+    max-width: 1080px;
+    margin: 40px auto 60px;
+    padding: 0 20px;
+    flex-grow: 1;
+  }
+  h1 {
+    color: #3b5bdb;
+    text-align: center;
+    margin-bottom: 32px;
+    user-select: none;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(240px,1fr));
+    gap: 28px;
+  }
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(59, 91, 219, 0.12);
+    padding: 24px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.25s ease, box-shadow 0.3s ease;
+    user-select: none;
+    text-decoration: none;
+    color: inherit;
+  }
+  .card:hover,
+  .card:focus-visible {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 38px rgba(59, 91, 219, 0.25);
+    outline: none;
+  }
+  .card h2 {
+    margin: 0 0 12px;
+    color: #2245a8;
+    font-size: 1.3rem;
+  }
+  .card p {
+    margin: 0;
+    color: #334e68;
+    line-height: 1.4;
+    font-size: 1rem;
+  }
+  footer {
+    text-align: center;
+    padding: 16px 10px;
+    font-size: 0.9rem;
+    color: #3b5bdb;
+    user-select: none;
+  }
+  /* Mobile tweaks */
+  @media (max-width: 500px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    nav a {
+      margin-left: 0;
+      margin-right: 18px;
+    }
+ }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EstudArt</div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="perfil.html">Perfil</a>
+    <a href="sobre_nós.html">Sobre Nós</a>
+  </nav>
+</header>
+
+<main>
+  <h1>Bem-vindo ao EstudArt</h1>
+  <div class="cards">
+    <a href="cronograma.html" class="card" tabindex="0" aria-label="Cronograma de Estudos">
+      <h2>Cronograma de Estudos</h2>
+      <p>Organize seu tempo de estudo com um cronograma prático, permitindo controlar horários e prioridades.</p>
+    </a>
+    <a href="flashcards.html" class="card" tabindex="0" aria-label="Materiais de Estudo">
+      <h2>Flashcards</h2>
+      <p>Revise com flashcards e memorize com facilidade. Crie, organize e aprenda sempre de forma prática.</p>
+    </a>
+    <a href="calendário.html" class="card" tabindex="0" aria-label="Progresso e Estatísticas">
+      <h2>Organize seu calendário e metas</h2>
+      <p>Organize seus dias, registre notas e acompanhe suas metas para um estudo eficiente.</p>
+    </a>
+    <a href="mapa mental.html" class="card" tabindex="0" aria-label="Tarefas e Lembretes">
+      <h2>Mapa Mental Interativo</h2>
+      <p>Organize suas ideias visualmente com um mapa mental prático e intuitivo, facilitando o aprendizado.</p>
+    </a>
+    <a href="biblioteca.html" class="card" tabindex="0" aria-label="Comunidade e Fórum">
+      <h2>Biblioteca de Recursos</h2>
+      <p>Armazene, organize e acesse seus arquivos e links importantes de forma prática.</p>
+    </a>
+    <a href="cronômetro.html" class="card" tabindex="0" aria-label="Configurações Personalizadas">
+      <h2>Cronômetro</h2>
+      <p>Organize seu tempo com o cronômetro e mantenha a inspiração com frases motivacionais personalizadas.</p>
+    </a>
+  </div>
+</main>
+
+<footer>
+  &copy; 2025 EstudArt • Criado por Joana Bichet Rocha. Todos os direitos reservados <a href="termos.html">Termos de Uso</a>
+</footer>
+
+<script>
+  // --- Notificação do cronômetro em outras páginas ---
+  function avisarFim(){
+    if(Notification.permission === "granted"){
+      new Notification("⏰ Tempo encerrado!", { body: "Seu cronômetro acabou!" });
+    } else {
+      alert("⏰ Tempo encerrado!");
+    }
+  }
+
+  if(Notification && Notification.permission !== "granted"){
+    Notification.requestPermission();
+  }
+
+  // Verifica se existe cronômetro ativo no localStorage
+  setInterval(() => {
+    const fimSalvo = localStorage.getItem("cronometroFim");
+    if(fimSalvo){
+      const fimDoCronometro = parseInt(fimSalvo);
+      if(fimDoCronometro <= Date.now()){
+        // Remove para não disparar várias vezes
+        localStorage.removeItem("cronometroFim");
+        avisarFim();
+      }
+    }
+  }, 1000); // checa a cada segundo
+</script>
+
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert("⚠️ Clique direito desabilitado neste site!");
+});
+</script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
+    e.preventDefault();
+    alert("⚠️ Esta ação não é permitida no site!");
+  }
+});
+</script>
+
+
+
+
+</body>
+</html>

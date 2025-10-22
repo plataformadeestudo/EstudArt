@@ -1,0 +1,788 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mapa Mental Interativo</title>
+<style>
+  /* Reset e básicos */
+  * {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0; padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    color: #2245a8;
+    user-select: none;
+    overflow: hidden;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Barra superior */
+  header {
+    height: 76px;
+    background: #3b5bdb;
+    color: #e0e7ff;
+    display: flex;
+    align-items: center;
+    padding: 0px 20px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 1100;
+  }
+  header nav {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+  }
+  header nav button {
+    background: transparent;
+    border: none;
+    color: #e0e7ff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    padding: 6px 12px;
+    border-radius: 6px;
+  }
+  header nav button:hover {
+    background: rgba(224,231,255,0.3);
+  }
+
+  #appContainer {
+    flex-grow: 1;
+    display: flex;
+    height: calc(100vh - 48px);
+    overflow: hidden;
+  }
+
+  /* Sidebar */
+  #sidebar {
+    width: 280px;
+    background: #3b5bdb;
+    color: #e0e7ff;
+    padding: 20px 20px 40px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
+    user-select: none;
+    overflow-y: auto;
+    
+  }
+  #sidebar h2 {
+    margin: 0 0 20px 0;
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+  }
+  .category {
+    margin-bottom: 30px;
+  }
+  .category h3 {
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: 1.3rem;
+    border-bottom: 1px solid rgba(224, 231, 255, 0.4);
+    padding-bottom: 6px;
+  }
+  .btn-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .btn-list button {
+    flex: 1 1 48%;
+    background: #2245a8;
+    border: none;
+    color: #e0e7ff;
+    font-weight: 600;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+  }
+  .btn-list button:hover,
+  .btn-list button.active {
+    background: #1a357f;
+  }
+
+  /* Botão Baixar */
+  #exportBtn {
+    background: #2245a8;
+    border: none;
+    color: #e0e7ff;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    user-select: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: auto;
+  }
+  #exportBtn:hover {
+    background-color: #1a357f;
+    box-shadow: 0 0 8px rgba(26, 53, 127, 0.8);
+  }
+
+  /* Canvas */
+  #canvasContainer {
+    flex-grow: 1;
+    background:
+      linear-gradient(#d3d9ff 1px, transparent 1px),
+      linear-gradient(90deg, #d3d9ff 1px, transparent 1px);
+    background-size: 30px 30px;
+    position: relative;
+    overflow: auto;
+    cursor: grab;
+    user-select: none;
+  }
+  #canvas {
+    position: relative;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+  }
+
+  /* Nodes */
+  .node {
+    position: absolute;
+    box-sizing: border-box;
+    min-width: 100px;
+    min-height: 50px;
+    padding: 10px 16px;
+    border-radius: 18px;
+    font-weight: 700;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: text;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: pre-wrap;
+    font-size: 1rem;
+    outline: none;
+    resize: both;
+    overflow: auto;
+    border: 3px solid #2245a8;
+    max-width: 350px;
+    transition: box-shadow 0.2s;
+    transform-origin: center center;
+    background-color: #3b5bdb;
+    color: #e0e7ff;
+    max-height: 300px;
+    position: relative; /* para o X posicionar */
+  }
+  .node.blue { background: #3b5bdb; color: #e0e7ff; }
+  .node.green { background: #2e8b57; color: #e0e7ff; }
+  .node.red { background: #bb2f2f; color: #ffe5e5; }
+  .node.orange { background: #e07b39; color: #fff3e6; }
+  .node[contenteditable="true"] {
+    cursor: text;
+  }
+  .node:focus {
+    box-shadow: 0 0 0 4px #ffbb33;
+    cursor: text;
+    z-index: 10;
+  }
+  .node.text-only {
+    background: transparent !important;
+    border: none !important;
+    font-weight: 900;
+    font-size: 1.4rem;
+    padding: 6px 12px;
+    color: #2245a8;
+    cursor: text;
+    resize: none !important;
+    min-width: 80px;
+    min-height: 30px;
+    box-shadow: none !important;
+  }
+  .node.arrow {
+    background: transparent !important;
+    border: none !important;
+    padding: 0;
+    cursor: grab;
+    resize: both;
+    overflow: visible;
+    min-width: 60px;
+    min-height: 30px;
+    max-width: 400px;
+    max-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .node.arrow svg {
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    user-select: none;
+  }
+  .node.sticker {
+    background: transparent !important;
+    border: none !important;
+    cursor: grab;
+    resize: both;
+    overflow: visible;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 180px;
+    max-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+  }
+  .node.sticker span {
+    font-size: 3rem;
+    pointer-events: none;
+    user-select: none;
+  }
+  .dragging {
+    cursor: grabbing !important;
+    opacity: 0.8;
+  }
+
+  /* Botão X (excluir) */
+  .delete-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: #ff4c4c;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    width: 26px;
+    height: 26px;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 26px;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out, background-color 0.3s;
+    user-select: none;
+    z-index: 20;
+    box-shadow: 0 0 6px rgba(255, 76, 76, 0.7);
+  }
+  .delete-btn:hover {
+    background-color: #e03b3b;
+    box-shadow: 0 0 10px rgba(224, 59, 59, 0.9);
+  }
+  .node.active .delete-btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  nav {
+    margin-left: auto;
+    display: flex;
+    gap: 20px;
+  }
+  nav a.nav-button {
+    background: transparent;
+    border: none;
+    color: #e0e7ff;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    user-select: none;
+  }
+  .node {
+  overflow: visible; /* não cria scroll no container */
+  position: absolute;
+}
+
+.node-content {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;   /* scroll só no conteúdo */
+  box-sizing: border-box;
+  padding: 4px;       /* um respiro para o texto não colar nas bordas */
+}
+/* Texto, setas e stickers sem fundo */
+.node-content.text-only,
+.node-content.arrow,
+.node-content.sticker {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+.node.balloon {
+  display: inline-flex;           /* para o conteúdo crescer junto */
+  flex-direction: column;         /* vertical */
+  min-height: auto;               /* evita corte de texto */
+}
+.node-content.balloon-content {
+  overflow: hidden;               /* evita scroll desnecessário */
+  padding: 8px 12px;              /* ajusta espaço interno */
+  line-height: 1.4;               /* garante que a primeira linha não seja cortada */
+}
+.node {
+  background: transparent; /* removendo cor de fundo global */
+  border: 3px solid #2245a8; /* se quiser manter a borda, ok */
+}
+.node.balloon { background: #3b5bdb; color: #e0e7ff; }
+.node.green { background: #2e8b57; color: #e0e7ff; }
+.node.red { background: #bb2f2f; color: #ffe5e5; }
+.node.orange { background: #e07b39; color: #fff3e6; }
+.node.text-only, .node.arrow, .node.sticker { background: transparent !important; border: none !important; }
+.node-content.balloon-content {
+  padding-top: 10px;       /* dá espaço no topo */
+  line-height: 1.4em;      /* aumenta um pouco o espaçamento das linhas */
+}
+/* Scroll aparece só quando ativo */
+.node-content.balloon-content {
+  overflow-y: hidden;  /* inicialmente escondido */
+}
+.node.active .node-content.balloon-content {
+  overflow-y: auto;    /* só mostra scroll quando ativo */
+}
+
+/* Tamanho maior para setas e stickers */
+.node.arrow {
+  min-width: 100px;
+  min-height: 40px;
+  max-width: 400px;
+  max-height: 200px;
+}
+.node.sticker {
+  min-width: 70px;
+  min-height: 70px;
+  max-width: 180px;
+  max-height: 180px;
+}
+.node.sticker span {
+  font-size: 4rem;  /* aumenta emoji */
+}
+
+/* Remover quadradão de fundo de arrow e sticker */
+.node.arrow, .node.sticker {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+/* Balões continuam com fundo */
+.node.balloon {
+  position: absolute;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 8px;
+  padding: 5px;
+  min-width: 100px;
+}
+
+/* Outros (setas, stickers, textos) ficam soltos */
+.node.arrow,
+.node.sticker,
+.node.text {
+  position: absolute;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Balões continuam com formato, mas usam a cor da classe (blue, red, etc) */
+.node.balloon {
+  position: absolute;
+  border-radius: 8px;
+  padding: 5px;
+  min-width: 100px;
+  background: inherit; /* herda da classe de cor */
+  border: inherit;     /* idem */
+}
+
+/* Outros (setas, stickers, textos) ficam soltos */
+.node.arrow,
+.node.sticker,
+.node.text {
+  position: absolute;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Balões – só formato, a cor vem das classes (.blue, .red, etc) */
+.node.balloon {
+  position: absolute;
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-width: 100px;
+  box-sizing: border-box;
+}
+.node.balloon {
+  position: absolute;
+  border-radius: 18px;
+  padding: 10px 16px;
+  min-width: 100px;
+  box-sizing: border-box;
+  /* sem background aqui! */
+}
+
+.node.blue { background: #3b5bdb; color: #e0e7ff; }
+.node.green { background: #2e8b57; color: #e0e7ff; }
+.node.red { background: #bb2f2f; color: #ffe5e5; }
+.node.orange { background: #e07b39; color: #fff3e6; }
+/* Texto separado / bloco de texto solto */
+.node-content.text-only {
+  color: #2245a8; /* <-- aqui você define a cor do texto */
+  font-size: 1.4rem; /* tamanho do texto */
+  font-weight: 900;  /* negrito opcional */
+  background: transparent !important; /* sem fundo */
+}
+
+  
+
+</style>
+</head>
+<body>
+
+<header>
+  <div>EstudArt</div>
+  <nav>
+    <a href="index.html" aria-label="Página inicial" class="nav-button">Início</a>
+    <a href="perfil.html" aria-label="Perfil do usuário" class="nav-button">Perfil</a>
+  </nav>
+</header>
+
+<div id="appContainer" role="main" aria-label="Aplicativo de mapa mental interativo">
+
+  <aside id="sidebar" aria-label="Barra lateral de ferramentas para mapa mental">
+    <h2>Mapa Mental</h2>
+
+    <section class="category" aria-label="Adicionar balões coloridos">
+     <h3>
+      Balões <br>
+      <span style="font-size: 0.6em;">
+      (Scroll + Ctrl → aumentar/diminuir)  (Scroll + Shift → girar)
+      </span>
+     </h3>
+      <div class="btn-list" role="list">
+        <button class="add-balloon blue" type="button" aria-label="Adicionar balão azul">Balão Azul</button>
+        <button class="add-balloon green" type="button" aria-label="Adicionar balão verde">Balão Verde</button>
+        <button class="add-balloon red" type="button" aria-label="Adicionar balão vermelho">Balão Vermelho</button>
+        <button class="add-balloon orange" type="button" aria-label="Adicionar balão laranja">Balão Laranja</button>
+      </div>
+    </section>
+
+    <section class="category" aria-label="Adicionar setas">
+      <h3>Setas</h3>
+      <div class="btn-list" role="list">
+        <button id="addArrowBtn" type="button" aria-label="Adicionar seta">Seta</button>
+      </div>
+    </section>
+
+    <section class="category" aria-label="Adicionar texto simples">
+      <h3>Texto</h3>
+      <div class="btn-list" role="list">
+        <button id="addTextBtn" type="button" aria-label="Adicionar texto simples">Texto</button>
+      </div>
+    </section>
+
+    <section class="category" aria-label="Adicionar stickers">
+      <h3>Stickers</h3>
+      <div class="btn-list" role="list">
+        <button class="add-sticker" data-type="lamp" type="button" aria-label="Adicionar lâmpada">💡</button>
+        <button class="add-sticker" data-type="star" type="button" aria-label="Adicionar estrela">⭐</button>
+        <button class="add-sticker" data-type="heart" type="button" aria-label="Adicionar coração">❤️</button>
+        <button class="add-sticker" data-type="smile" type="button" aria-label="Adicionar sorriso">😊</button>
+      </div>
+    </section>
+
+    <button id="exportBtn" aria-label="Exportar mapa mental como imagem PNG">Baixar Mapa Mental</button>
+  </aside>
+
+  <main id="canvasContainer" tabindex="0" aria-label="Área do mapa mental">
+    <div id="canvas" aria-live="polite" aria-relevant="additions"></div>
+  </main>
+
+</div>
+
+<!-- Biblioteca html2canvas CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+  const canvas = document.getElementById('canvas');
+const exportBtn = document.getElementById('exportBtn');
+
+// Função para criar nodes
+function createNode(type, options = {}) {
+  const node = document.createElement('div');
+  node.classList.add('node');
+  node.tabIndex = 0;
+  node.style.left = (options.x || 100) + 'px';
+  node.style.top = (options.y || 100) + 'px';
+  node.style.transform = 'rotate(0deg) scale(1)';
+  node._rotation = 0;
+  node._scale = 1;
+
+  const content = document.createElement('div');
+  content.classList.add('node-content');
+
+  switch(type) {
+  case 'balloon':
+    node.classList.add('balloon', options.color || 'blue');
+    content.contentEditable = true;
+    content.textContent = options.text || 'Clique para editar';
+    content.classList.add('balloon-content');
+    break;
+
+  case 'text':
+    node.classList.add('text');
+    content.contentEditable = true;
+    content.textContent = options.text || 'Digite um título';
+    content.classList.add('text-only');
+    content.style.display = 'inline-block';
+    break;
+
+  case 'arrow':
+    node.classList.add('arrow');
+    content.innerHTML = getArrowSVG(options.arrowType || 'straight');
+    content.style.display = 'inline-block';
+    break;
+
+  case 'sticker':
+    node.classList.add('sticker');
+    content.innerHTML = getStickerSVG(options.stickerType);
+    content.style.display = 'inline-block';
+    break;
+}
+
+
+  // Botão de deletar
+  const deleteBtn = document.createElement('button'); 
+  deleteBtn.textContent = '×';
+  deleteBtn.classList.add('delete-btn');
+  deleteBtn.type = 'button';
+  deleteBtn.setAttribute('aria-label', 'Excluir elemento');
+  deleteBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    node.remove();
+  });
+
+  node.appendChild(content);
+  node.appendChild(deleteBtn);
+
+  // Ativar node
+  node.addEventListener('mousedown', e => {
+    if(e.target === deleteBtn) return;
+    canvas.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
+  });
+
+  // ENTER em editáveis
+  content.addEventListener('keydown', e => {
+    if(e.key === 'Enter') {
+      document.execCommand('insertHTML', false, '\n');
+      e.preventDefault();
+    }
+  });
+
+  // Zoom e rotação
+  node.addEventListener('wheel', e => {
+    if(!e.ctrlKey && !e.shiftKey) return;
+    e.preventDefault();
+    if(e.ctrlKey) {
+      node._scale += e.deltaY * -0.005;
+      node._scale = Math.min(Math.max(0.3, node._scale), 3);
+    }
+    if(e.shiftKey) {
+      node._rotation += e.deltaY * -0.25;
+      node._rotation = node._rotation % 360;
+    }
+    node.style.transform = `rotate(${node._rotation}deg) scale(${node._scale})`;
+  });
+
+  canvas.appendChild(node);
+  return node;
+}
+
+// Funções SVG para setas
+function getArrowSVG(type = 'straight') {
+  switch(type){
+    case 'curved':
+      return `
+        <svg viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 50 Q60 10 110 50" stroke="#2245a8" stroke-width="4" fill="transparent" marker-end="url(#arrowhead)"/>
+          <defs>
+            <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="#2245a8"/>
+            </marker>
+          </defs>
+        </svg>`;
+    case 'loop':
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 50 C 40 10, 60 90, 90 50" stroke="#2245a8" stroke-width="4" fill="transparent" marker-end="url(#arrowhead)"/>
+          <defs>
+            <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="#2245a8"/>
+            </marker>
+          </defs>
+        </svg>`;
+    default:
+      return `
+        <svg viewBox="0 0 64 16" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+              <polygon points="0 0, 6 3, 0 6" fill="#2245a8"/>
+            </marker>
+          </defs>
+          <line x1="0" y1="8" x2="58" y2="8" stroke="#2245a8" stroke-width="4" marker-end="url(#arrowhead)"/>
+        </svg>`;
+  }
+}
+
+// Função para stickers
+function getStickerSVG(type) {
+  switch(type) {
+    case 'lamp': return `<span>💡</span>`;
+    case 'star': return `<span>⭐</span>`;
+    case 'heart': return `<span>❤️</span>`;
+    case 'smile': return `<span>😊</span>`;
+    default: return `<span>❓</span>`;
+  }
+}
+
+// Botões da sidebar
+document.querySelectorAll('.add-balloon').forEach(btn => {
+  btn.addEventListener('click', () => {
+    createNode('balloon', { color: btn.classList[1], x: 150, y: 150 });
+  });
+});
+
+document.getElementById('addArrowBtn').addEventListener('click', () => {
+  const tipo = prompt("Escolha o tipo de seta: 'straight', 'curved', 'loop'", "straight");
+  createNode('arrow', { x: 200, y: 200, arrowType: tipo });
+});
+
+document.getElementById('addTextBtn').addEventListener('click', () => {
+  createNode('text', { x: 250, y: 250 });
+});
+
+document.querySelectorAll('.add-sticker').forEach(btn => {
+  btn.addEventListener('click', () => {
+    createNode('sticker', { stickerType: btn.dataset.type, x: 200, y: 200 });
+  });
+});
+
+// Drag and Drop
+let draggingNode = null;
+let offsetX = 0;
+let offsetY = 0;
+
+canvas.addEventListener('mousedown', e => {
+  const target = e.target.closest('.node');
+  if (!target || e.target.classList.contains('delete-btn')) return;
+  draggingNode = target;
+  offsetX = e.clientX - draggingNode.getBoundingClientRect().left;
+  offsetY = e.clientY - draggingNode.getBoundingClientRect().top;
+  draggingNode.classList.add('dragging');
+});
+
+window.addEventListener('mousemove', e => {
+  if (!draggingNode) return;
+  const containerRect = canvas.getBoundingClientRect();
+  let x = e.clientX - containerRect.left - offsetX + canvas.scrollLeft;
+  let y = e.clientY - containerRect.top - offsetY + canvas.scrollTop;
+  x = Math.max(0, Math.min(x, canvas.clientWidth - draggingNode.offsetWidth));
+  y = Math.max(0, Math.min(y, canvas.clientHeight - draggingNode.offsetHeight));
+  draggingNode.style.left = x + 'px';
+  draggingNode.style.top = y + 'px';
+});
+
+window.addEventListener('mouseup', () => {
+  if(draggingNode) draggingNode.classList.remove('dragging');
+  draggingNode = null;
+});
+
+// Exportar canvas
+exportBtn.addEventListener('click', () => {
+  document.activeElement.blur();
+  if (window.getSelection) window.getSelection().removeAllRanges();
+  html2canvas(canvas, { backgroundColor: null, scale: 2 }).then(c => {
+    const link = document.createElement('a');
+    link.download = 'mapa-mental.png';
+    link.href = c.toDataURL('image/png');
+    link.click();
+  });
+});
+
+// Remove active se clicar fora
+document.getElementById('canvasContainer').addEventListener('mousedown', e => {
+  if (!e.target.closest('.node')) {
+    canvas.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
+  }
+});
+
+
+  if(Notification && Notification.permission !== "granted"){
+    Notification.requestPermission();
+  }
+
+  // Checa a cada segundo se o cronômetro terminou
+  setInterval(() => {
+    const fimSalvo = localStorage.getItem("cronometroFim");
+    if(fimSalvo){
+      const fim = parseInt(fimSalvo);
+      const agora = Date.now();
+      if(agora >= fim){
+        // Remove o cronômetro salvo
+        localStorage.removeItem("cronometroFim");
+        localStorage.removeItem("cronometroPausado");
+
+        // Notificação
+        if(Notification.permission === "granted"){
+          new Notification("⏰ Tempo encerrado!", { body: "Seu cronômetro acabou!" });
+        } else {
+          alert("⏰ Tempo encerrado!");
+        }
+      }
+    }
+  }, 1000);
+
+</script>
+
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert("⚠️ Clique direito desabilitado neste site!");
+});
+</script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
+    e.preventDefault();
+    alert("⚠️ Esta ação não é permitida no site!");
+  }
+});
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,702 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Flashcards - MeuSite</title>
+<style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+  }
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f4ff;
+    color: #222;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  /* Header */
+  header {
+    background: #3b5bdb;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 3px 10px rgba(59,91,219,0.3);
+    user-select: none;
+  }
+  .logo {
+    font-weight: 900;
+    font-size: 1.8rem;
+    color: #e0e7ff;
+    letter-spacing: 2px;
+  }
+  nav a {
+    color: #dbe4ff;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 24px;
+    transition: color 0.3s ease;
+  }
+  nav a:hover,
+  nav a:focus-visible {
+    color: #fff;
+    outline: none;
+  }
+  /* Container principal: sidebar + main */
+  .container {
+    flex: 1;
+    display: flex;
+    max-width: 1080px;
+    margin: 40px auto 60px;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  /* Sidebar */
+  aside.sidebar {
+    width: 220px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(59, 91, 219, 0.12);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  aside.sidebar h2 {
+    margin: 0 0 16px;
+    color: #3b5bdb;
+    user-select: none;
+  }
+  .folder-list {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  .folder-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    margin-bottom: 8px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #3b5bdb;
+    border: 1px solid transparent;
+    user-select: none;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .folder-item:hover {
+    background-color: #e0e7ff;
+  }
+  .folder-item.selected {
+    background-color: #3b5bdb;
+    color: #e0e7ff;
+    border-color: #2245a8;
+  }
+
+  /* Botão apagar pasta */
+  .folder-item button {
+    background: transparent;
+    border: none;
+    color: #d9534f;
+    font-size: 1.1rem;
+    cursor: pointer;
+    user-select: none;
+    padding: 0;
+    transition: color 0.2s ease;
+  }
+
+  .folder-item button:hover {
+    color: #b52b27;
+  }
+
+  button#create-folder-btn {
+    margin-top: 12px;
+    border-radius: 20px;
+    border: none;
+    background-color: #3b5bdb;
+    color: #e0e7ff;
+    padding: 10px 0;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  button#create-folder-btn:hover {
+    background-color: #2245a8;
+  }
+
+  /* Main content */
+  main {
+    flex: 1;
+    margin-left: 28px;
+    display: flex;
+    flex-direction: column;
+  }
+  main h1 {
+    color: #3b5bdb;
+    user-select: none;
+    margin: 0 0 24px;
+  }
+  button#add-flashcard-btn {
+    align-self: flex-start;
+    border-radius: 20px;
+    background: #3b5bdb;
+    color: #e0e7ff;
+    border: none;
+    padding: 8px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 28px;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  button#add-flashcard-btn:hover {
+    background-color: #2245a8;
+  }
+
+  /* Cards grid */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: 28px;
+  }
+
+  /* Card */
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 8px 28px rgba(59, 91, 219, 0.12);
+    cursor: pointer;
+    perspective: 1000px;
+    height: 180px;
+    position: relative;
+    user-select: none;
+    outline: none;
+  }
+  .card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+    border-radius: 14px;
+  }
+  .card.flipped .card-inner {
+    transform: rotateY(180deg);
+  }
+  .card-front,
+  .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    backface-visibility: hidden;
+    padding: 24px 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .card-front {
+    color: #2245a8;
+  }
+  .card-back {
+    background: #f0f4ff;
+    color: #334e68;
+    transform: rotateY(180deg);
+  }
+  .card-front h2,
+  .card-back p {
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+  .card-front h2 {
+    font-weight: 700;
+  }
+  .card-back p {
+    font-weight: 500;
+  }
+
+  /* Controls (editar e apagar) */
+  .card-controls {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    gap: 12px;
+  }
+  .card-controls button {
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #3b5bdb;
+    transition: color 0.2s ease;
+    user-select: none;
+  }
+  .card-controls button:hover {
+    color: #2245a8;
+  }
+
+  /* Modal backdrop */
+  #modal-backdrop {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  #modal-backdrop.active {
+    display: flex;
+  }
+
+  /* Modal window */
+  .modal {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    user-select: text;
+  }
+  .modal h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #3b5bdb;
+  }
+  .modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .modal form input[type="text"],
+  .modal form textarea {
+    padding: 8px;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+    resize: vertical;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  .modal form textarea {
+    min-height: 80px;
+  }
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .modal-buttons button {
+    border-radius: 20px;
+    padding: 6px 14px;
+    border: 1px solid #666;
+    background: none;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+    color: #3b5bdb;
+    font-weight: 600;
+  }
+  .modal-buttons button:hover {
+    background-color: #e0e7ff;
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 900px) {
+    .container {
+      flex-direction: column;
+      margin: 20px auto 40px;
+      padding: 0 10px;
+    }
+    aside.sidebar {
+      width: 100%;
+      margin-bottom: 20px;
+      padding: 12px 16px;
+    }
+    main {
+      margin-left: 0;
+    }
+  }
+  
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EstudArt</div>
+  <nav>
+    <a href="index.html">Início</a>
+    <a href="perfil.html">Perfil</a>
+  </nav>
+</header>
+
+<div class="container">
+  <aside class="sidebar" aria-label="Lista de pastas">
+    <h2>Pastas</h2>
+    <div class="folder-list" id="folder-list">
+      <!-- Lista de pastas -->
+    </div>
+    <button id="create-folder-btn" aria-haspopup="dialog" aria-controls="modal-folder">Criar Pasta</button>
+  </aside>
+
+  <main>
+    <h1 id="main-title">Selecione uma pasta</h1>
+    <button id="add-flashcard-btn" style="display:none;">+ Adicionar Flashcard</button>
+    <div class="cards" id="cards-container">
+      <p style="color:#334e68; font-style: italic;" id="empty-msg">Nenhuma pasta criada. Clique em "Criar Pasta" para começar.</p>
+    </div>
+  </main>
+</div>
+
+<!-- Modal de Criar Pasta -->
+<div id="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <section class="modal" id="modal-folder" hidden>
+    <h3 id="modal-title">Criar Nova Pasta</h3>
+    <form id="form-folder" autocomplete="off">
+      <input type="text" id="folder-name" name="folder-name" placeholder="Nome da pasta" required maxlength="30" aria-describedby="folder-desc" />
+      <div id="folder-desc" style="font-size:0.85rem; color:#666; margin-bottom:12px;">Máximo 30 caracteres</div>
+      <div class="modal-buttons">
+        <button type="submit">Salvar</button>
+        <button type="button" id="btn-cancel-folder">Cancelar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Modal Criar/Editar Flashcard -->
+  <section class="modal" id="modal-flashcard" hidden>
+    <h3 id="modal-flashcard-title">Adicionar Flashcard</h3>
+    <form id="form-flashcard" autocomplete="off">
+      <input type="text" id="flashcard-question" name="flashcard-question" placeholder="Pergunta" required maxlength="200" aria-describedby="question-desc" />
+      <div id="question-desc" style="font-size:0.85rem; color:#666; margin-bottom:12px;">Máximo 200 caracteres</div>
+      <textarea id="flashcard-answer" name="flashcard-answer" placeholder="Resposta" required maxlength="1000" aria-describedby="answer-desc"></textarea>
+      <div id="answer-desc" style="font-size:0.85rem; color:#666; margin-bottom:12px;">Máximo 1000 caracteres</div>
+      <div class="modal-buttons">
+        <button type="submit">Salvar</button>
+        <button type="button" id="btn-cancel-flashcard">Cancelar</button>
+      </div>
+    </form>
+  </section>
+</div>
+
+<script>
+(() => {
+  // ---------------------------
+  // DADOS
+  // ---------------------------
+  let folders = JSON.parse(localStorage.getItem('folders') || '[]');
+  let selectedFolderId = localStorage.getItem('selectedFolderId') || null;
+  let editingFlashcard = null;
+
+  // ---------------------------
+  // ELEMENTOS
+  // ---------------------------
+  const folderListEl = document.getElementById('folder-list');
+  const createFolderBtn = document.getElementById('create-folder-btn');
+  const addFlashcardBtn = document.getElementById('add-flashcard-btn');
+  const mainTitleEl = document.getElementById('main-title');
+  const cardsContainer = document.getElementById('cards-container');
+
+  const modalBackdrop = document.getElementById('modal-backdrop');
+
+  // Modal pasta
+  const modalFolder = document.getElementById('modal-folder');
+  const formFolder = document.getElementById('form-folder');
+  const inputFolderName = document.getElementById('folder-name');
+  const btnCancelFolder = document.getElementById('btn-cancel-folder');
+
+  // Modal flashcard
+  const modalFlashcard = document.getElementById('modal-flashcard');
+  const formFlashcard = document.getElementById('form-flashcard');
+  const inputQuestion = document.getElementById('flashcard-question');
+  const inputAnswer = document.getElementById('flashcard-answer');
+  const btnCancelFlashcard = document.getElementById('btn-cancel-flashcard');
+
+  // ---------------------------
+  // LOCALSTORAGE
+  // ---------------------------
+  function updateStorage() {
+    localStorage.setItem('folders', JSON.stringify(folders));
+    localStorage.setItem('selectedFolderId', selectedFolderId);
+  }
+
+  // ---------------------------
+  // RENDER FOLDERS
+  // ---------------------------
+  function renderFolders() {
+    folderListEl.innerHTML = '';
+    folders.forEach(folder => {
+      const div = document.createElement('div');
+      div.className = 'folder-item' + (folder.id === selectedFolderId ? ' selected' : '');
+      div.tabIndex = 0;
+      div.setAttribute('role', 'button');
+      div.setAttribute('aria-pressed', folder.id === selectedFolderId ? 'true' : 'false');
+
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = folder.name;
+      nameSpan.style.flexGrow = '1';
+      nameSpan.style.cursor = 'pointer';
+      nameSpan.addEventListener('click', () => selectFolder(folder.id));
+
+      const btnDelete = document.createElement('button');
+      btnDelete.textContent = '❌';
+      btnDelete.title = 'Excluir pasta';
+      btnDelete.addEventListener('click', e => {
+        e.stopPropagation();
+        if (confirm(`Tem certeza que deseja apagar a pasta "${folder.name}"?`)) {
+          deleteFolder(folder.id);
+        }
+      });
+
+      div.appendChild(nameSpan);
+      div.appendChild(btnDelete);
+      folderListEl.appendChild(div);
+    });
+  }
+
+  function deleteFolder(id) {
+    folders = folders.filter(f => f.id !== id);
+    if (selectedFolderId === id) {
+      selectedFolderId = null;
+      mainTitleEl.textContent = 'Selecione uma pasta';
+      addFlashcardBtn.style.display = 'none';
+      cardsContainer.innerHTML = `<p style="color:#334e68; font-style: italic;">Nenhuma pasta selecionada.</p>`;
+    }
+    renderFolders();
+    renderFlashcards();
+    updateStorage(); // SALVA
+  }
+
+  function selectFolder(id) {
+    selectedFolderId = id;
+    renderFolders();
+    renderFlashcards();
+    updateStorage(); // SALVA
+  }
+
+  function addFolder(name) {
+    const newFolder = {
+      id: crypto.randomUUID(),
+      name,
+      flashcards: []
+    };
+    folders.push(newFolder);
+    selectFolder(newFolder.id);
+    inputFolderName.value = '';
+    updateStorage(); // SALVA
+  }
+
+  // ---------------------------
+  // FLASHCARDS
+  // ---------------------------
+  function renderFlashcards() {
+    cardsContainer.innerHTML = '';
+    if(!selectedFolderId) {
+      mainTitleEl.textContent = 'Selecione uma pasta';
+      addFlashcardBtn.style.display = 'none';
+      cardsContainer.innerHTML = `<p style="color:#334e68; font-style: italic;">Nenhuma pasta selecionada.</p>`;
+      return;
+    }
+    const folder = folders.find(f => f.id === selectedFolderId);
+    if(!folder) return;
+
+    mainTitleEl.textContent = folder.name;
+    addFlashcardBtn.style.display = 'inline-block';
+
+    if(folder.flashcards.length === 0) {
+      cardsContainer.innerHTML = `<p style="color:#334e68; font-style: italic;">Nenhum flashcard nesta pasta.</p>`;
+      return;
+    }
+
+    folder.flashcards.forEach(fc => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.tabIndex = 0;
+      const inner = document.createElement('div');
+      inner.className = 'card-inner';
+
+      const front = document.createElement('div');
+      front.className = 'card-front';
+      front.innerHTML = `<h2>${fc.question}</h2>`;
+
+      const back = document.createElement('div');
+      back.className = 'card-back';
+      back.innerHTML = `<p>${fc.answer}</p>`;
+
+      // Controles
+      const controls = document.createElement('div');
+      controls.className = 'card-controls';
+      const btnEdit = document.createElement('button');
+      btnEdit.innerHTML = '✏️';
+      btnEdit.title = 'Editar flashcard';
+      btnEdit.addEventListener('click', e => {
+        e.stopPropagation();
+        openFlashcardModal(fc);
+      });
+      const btnDelete = document.createElement('button');
+      btnDelete.innerHTML = '🗑️';
+      btnDelete.title = 'Apagar flashcard';
+      btnDelete.addEventListener('click', e => {
+        e.stopPropagation();
+        if(confirm('Tem certeza que deseja apagar este flashcard?')) {
+          folder.flashcards = folder.flashcards.filter(f => f.id !== fc.id);
+          renderFlashcards();
+          updateStorage();
+        }
+      });
+      controls.appendChild(btnEdit);
+      controls.appendChild(btnDelete);
+
+      back.appendChild(controls);
+
+      inner.appendChild(front);
+      inner.appendChild(back);
+      card.appendChild(inner);
+
+      // Flip
+      card.addEventListener('click', () => card.classList.toggle('flipped'));
+
+      cardsContainer.appendChild(card);
+    });
+  }
+
+  function openFlashcardModal(fc=null) {
+    editingFlashcard = fc;
+    if(fc) {
+      modalFlashcard.querySelector('#modal-flashcard-title').textContent = 'Editar Flashcard';
+      inputQuestion.value = fc.question;
+      inputAnswer.value = fc.answer;
+    } else {
+      modalFlashcard.querySelector('#modal-flashcard-title').textContent = 'Adicionar Flashcard';
+      inputQuestion.value = '';
+      inputAnswer.value = '';
+    }
+    modalBackdrop.classList.add('active');
+    modalFlashcard.hidden = false;
+  }
+
+  // ---------------------------
+  // EVENTOS
+  // ---------------------------
+  createFolderBtn.addEventListener('click', () => {
+    modalBackdrop.classList.add('active');
+    modalFolder.hidden = false;
+    inputFolderName.focus();
+  });
+
+  btnCancelFolder.addEventListener('click', () => {
+    modalBackdrop.classList.remove('active');
+    modalFolder.hidden = true;
+  });
+
+  btnCancelFlashcard.addEventListener('click', () => {
+    modalBackdrop.classList.remove('active');
+    modalFlashcard.hidden = true;
+  });
+
+  formFolder.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = inputFolderName.value.trim();
+    if(name) addFolder(name);
+    modalBackdrop.classList.remove('active');
+    modalFolder.hidden = true;
+  });
+
+  addFlashcardBtn.addEventListener('click', () => openFlashcardModal());
+
+  formFlashcard.addEventListener('submit', e => {
+    e.preventDefault();
+    const question = inputQuestion.value.trim();
+    const answer = inputAnswer.value.trim();
+    if(!question || !answer) return;
+    const folder = folders.find(f => f.id === selectedFolderId);
+    if(!folder) return;
+
+    if(editingFlashcard) {
+      editingFlashcard.question = question;
+      editingFlashcard.answer = answer;
+    } else {
+      folder.flashcards.push({
+        id: crypto.randomUUID(),
+        question,
+        answer
+      });
+    }
+
+    renderFlashcards();
+    updateStorage();
+    modalBackdrop.classList.remove('active');
+    modalFlashcard.hidden = true;
+    editingFlashcard = null;
+  });
+
+  // Fechar modals clicando fora
+  modalBackdrop.addEventListener('click', e => {
+    if(e.target === modalBackdrop) {
+      modalBackdrop.classList.remove('active');
+      modalFolder.hidden = true;
+      modalFlashcard.hidden = true;
+    }
+  });
+
+  // Inicial render
+  renderFolders();
+  renderFlashcards();
+
+})();
+
+if(Notification && Notification.permission !== "granted"){
+    Notification.requestPermission();
+  }
+
+  // Checa a cada segundo se o cronômetro terminou
+  setInterval(() => {
+    const fimSalvo = localStorage.getItem("cronometroFim");
+    if(fimSalvo){
+      const fim = parseInt(fimSalvo);
+      const agora = Date.now();
+      if(agora >= fim){
+        // Remove o cronômetro salvo
+        localStorage.removeItem("cronometroFim");
+        localStorage.removeItem("cronometroPausado");
+
+        // Notificação
+        if(Notification.permission === "granted"){
+          new Notification("⏰ Tempo encerrado!", { body: "Seu cronômetro acabou!" });
+        } else {
+          alert("⏰ Tempo encerrado!");
+        }
+      }
+    }
+  }, 1000);
+  
+</script>
+
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  alert("⚠️ Clique direito desabilitado neste site!");
+});
+</script>
+
+<script>
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && (e.key === 'c' || e.key === 's' || e.key === 'u')) {
+    e.preventDefault();
+    alert("⚠️ Esta ação não é permitida no site!");
+  }
+});
+</script>
+
+</body>
+</html>
