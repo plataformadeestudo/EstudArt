@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Biblioteca de Recursos - MeuSite</title>
 <style>
- 
+
 /* ===== Reset básico ===== */
 * {
   box-sizing: border-box;
@@ -32,6 +32,8 @@ header {
   justify-content: space-between;
   box-shadow: 0 3px 10px rgba(59, 91, 219, 0.3);
   user-select: none;
+  position: relative;
+  z-index: 1600;
 }
 header .logo {
   font-weight: 900;
@@ -63,6 +65,7 @@ main {
   padding: 0 20px;
   display: flex;
   gap: 20px;
+  min-height: calc(100vh - 80px);
 }
 
 /* ===== Sidebar ===== */
@@ -76,6 +79,7 @@ aside#sidebar {
   display: flex;
   flex-direction: column;
   user-select: none;
+  transition: left 0.3s ease;
 }
 aside#sidebar h2 {
   font-weight: 900;
@@ -120,12 +124,15 @@ section#content {
   padding: 20px 24px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.1);
   overflow-y: auto;
+  max-height: calc(100vh - 80px);
 }
 section#content h2 {
   margin-top: 0;
   font-weight: 900;
   color: #2245a8;
 }
+
+/* ===== Resource List ===== */
 #resourceList {
   list-style: none;
   padding: 0;
@@ -303,7 +310,7 @@ footer {
   word-break: break-word;
 }
 
-/* ===== Mobile / Tablet ===== */
+/* ===== MOBILE / TABLET ===== */
 @media (max-width: 768px) {
   main {
     flex-direction: column;
@@ -314,10 +321,13 @@ footer {
     border-radius: 8px;
     padding: 16px;
   }
-  section#content { max-height: none; }
+  section#content {
+    max-height: none;
+    width: 100%;
+  }
 }
 
-/* ===== Mobile Sidebar ===== */
+/* ===== MOBILE SIDEBAR ===== */
 @media (max-width: 500px) {
   #menuToggle {
     display: block;
@@ -330,7 +340,7 @@ footer {
     padding: 6px 10px;
     border-radius: 8px;
     cursor: pointer;
-    z-index: 1500;
+    z-index: 1600;
   }
   #sidebar {
     position: fixed;
@@ -339,11 +349,10 @@ footer {
     height: 100vh;
     width: 280px;
     transition: left 0.3s ease;
-    z-index: 1400;
+    z-index: 1500;
   }
   #sidebar.active { left: 0; }
 }
-
 
 
 </style>
@@ -721,5 +730,3 @@ document.addEventListener('click', e => {
 
 </body>
 </html>
-
-
