@@ -414,20 +414,21 @@ section#content h2 {
     font-size: 0.85rem;
   }
 
-  /* Sidebar mobile slide */
   #menuToggle {
     display: block;
     position: fixed;
-    top: 12px;
-    left: 12px;
+    bottom: 12px;
+    right: 12px;
     font-size: 2rem;
     background: #3b5bdb;
     color: #e0e7ff;
     padding: 6px 10px;
-    border-radius: 8px;
+    border-radius: 50%;
     cursor: pointer;
     z-index: 1500;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
+
 
   #sidebar {
     position: fixed;
@@ -850,3 +851,4 @@ document.addEventListener('click', e => {
 
 </body>
 </html>
+
