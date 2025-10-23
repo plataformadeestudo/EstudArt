@@ -366,25 +366,107 @@ section#content h2 {
 
 
 /* ===== RESPONSIVO PARA CELULAR ===== */
+@media (max-width: 768px) {
+  main#appContainer {
+    flex-direction: column;
+    padding: 16px;
+    gap: 16px;
+    margin: 0 auto 40px auto;
+  }
+
+  aside#sidebar {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+  }
+
+  section#content {
+    width: 100%;
+    max-width: 100%;
+    min-height: 300px;
+    padding: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    max-height: none;
+  }
+}
+
 @media (max-width: 480px) {
   header {
     padding: 12px 16px;
-    flex-direction: row; /* mantém horizontal */
-    justify-content: space-between; /* logo à esquerda, nav à direita */
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
   }
 
   header .logo {
-    font-size: 1.4rem; /* reduz para caber melhor */
+    font-size: 1.4rem;
   }
 
   nav {
     display: flex;
-    gap: 16px;
-    margin-left: auto; /* empurra os links pro canto direito */
+    gap: 12px;
+    margin-left: auto;
   }
 
   nav a {
+    font-size: 0.85rem;
+  }
+
+  /* Sidebar mobile slide */
+  #menuToggle {
+    display: block;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    font-size: 2rem;
+    background: #3b5bdb;
+    color: #e0e7ff;
+    padding: 6px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    z-index: 1500;
+  }
+
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 250px;
+    height: 100vh;
+    transition: left 0.3s ease;
+    z-index: 1400;
+    padding: 16px;
+  }
+
+  #sidebar.active {
+    left: 0;
+  }
+
+  main#appContainer {
+    margin-top: 70px; /* garante que o conteúdo não fique atrás do header */
+  }
+
+  /* Ajusta cards e listas para caber */
+  .cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  #resourceList li {
+    font-size: 0.9rem;
+  }
+
+  #modal {
+    width: 90%;
+    max-width: 360px;
+    padding: 20px;
+  }
+
+  #fileDropZone {
+    height: 60px;
+    line-height: 60px;
     font-size: 0.9rem;
   }
 }
